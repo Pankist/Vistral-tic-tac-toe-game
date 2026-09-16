@@ -47,7 +47,10 @@ def _read_one(crop: np.ndarray, t_empty: float) -> CellRead:
         conf = min(1.0, 0.6 + (t_empty - ink_ratio) / t_empty * 0.4)
         return CellRead(mark="", conf=round(conf, 2), ink_ratio=round(ink_ratio, 3))
 
-    contours, hierarchy = cv2.findContours(binary, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    # hole detection runs on a CLOSED image: a thin drawn ring that broke into
+    # arcs under thresholding/denoise is stitched back before contour analysis
+    closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    contours, hierarchy = cv2.findContours(closed, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
         return CellRead(mark="", conf=0.3, ink_ratio=round(ink_ratio, 3))
 
@@ -66,16 +69,30 @@ def _read_one(crop: np.ndarray, t_empty: float) -> CellRead:
     while child != -1:
         hole_area = max(hole_area, cv2.contourArea(contours[child]))
         child = hierarchy[0][child][0]
-    has_hole = hole_area / area > gcfg.MIN_HOLE_RATIO
+    has_hole = hole_area / max(outer_area, 1.0) > gcfg.MIN_HOLE_RATIO
+
+    # center occupancy of the raw ink: an X has ink at its own centroid (the
+    # crossing); an O is empty there even when its ring is broken. This is the
+    # discriminator that survives everything morphology does to a thin circle.
+    ys, xs = np.nonzero(binary)
+    cy, cx = float(ys.mean()), float(xs.mean())
+    r = np.hypot(xs - cx, ys - cy)
+    r_scale = float(np.percentile(r, 85))
+    center_frac = (float(np.count_nonzero(r < 0.35 * r_scale)) / r.size
+                   if r_scale > 3 else 1.0)
 
     if has_hole and circularity > gcfg.O_CIRCULARITY:
         margin = min(1.0, (circularity - gcfg.O_CIRCULARITY) / (1 - gcfg.O_CIRCULARITY))
         conf = 0.7 + 0.3 * margin
         return CellRead(mark="O", conf=round(conf, 2), ink_ratio=round(ink_ratio, 3))
-    if not has_hole:
-        # the further from O-like circularity, the surer we are it's an X
+    if center_frac < gcfg.O_CENTER_FRAC:
+        # ring-shaped ink without a clean hole: a broken/thin O. Confidence is
+        # kept below T_ARBITER on purpose — this reading asks for a closer look.
+        conf = 0.72 if has_hole else 0.65
+        return CellRead(mark="O", conf=conf, ink_ratio=round(ink_ratio, 3))
+    if center_frac > gcfg.X_CENTER_FRAC and not has_hole:
         conf = 0.6 + 0.4 * min(1.0, max(0.0, (gcfg.O_CIRCULARITY - circularity) / gcfg.O_CIRCULARITY))
         return CellRead(mark="X", conf=round(conf, 2), ink_ratio=round(ink_ratio, 3))
-    # hole but not circular, or circular but no hole: ambiguous on purpose
-    guess = "O" if circularity > gcfg.O_CIRCULARITY else "X"
+    # conflicting evidence: ambiguous on purpose — arbiter territory
+    guess = "O" if (has_hole or circularity > gcfg.O_CIRCULARITY) else "X"
     return CellRead(mark=guess, conf=0.5, ink_ratio=round(ink_ratio, 3))
