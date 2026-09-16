@@ -32,7 +32,7 @@ CANONICAL = 330              # rectified board is CANONICAL x CANONICAL px
 
 # --- speech -------------------------------------------------------------------
 ANNOUNCER = "template"       # template | llm (llm adds one flavor line, 2s budget)
-VOICE = "off"                # on | off — client speechSynthesis default (UI can toggle)
+VOICE = "on"                 # on | off — client speechSynthesis default (UI can toggle)
 
 # --- models (used only when confidence drops / engine=llm) ---------------------
 MODEL_ARBITER = "anthropic/claude-sonnet-4.6"
