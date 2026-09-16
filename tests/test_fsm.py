@@ -264,6 +264,55 @@ def test_mismatch_fix_page_resumes_await():
     assert "verified" in points(effects)
 
 
+def test_mismatch_self_heals_when_page_becomes_correct():
+    """A transient misread (half-drawn O reads as X) trips MISMATCH; once the
+    finished O reads correctly, the session must confirm and move on by
+    itself — no button, no reset."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    f.step(s, ControlEvent("engine_move", cell=4))
+    wrong = list(s.board)
+    wrong[4] = "X"                             # half-drawn O read as X
+    effects = feed(f, s, wrong, P.k_stable)
+    assert s.state == "MISMATCH"
+    ann = [e for e in effects if isinstance(e, Announce)]
+    assert any(a.point == "mismatch_wrong_mark" for a in ann)
+    good = list(s.board)
+    good[4] = "O"                              # the ink is finished now
+    effects = feed(f, s, good, P.k_stable)
+    assert s.state == "HUMAN_TURN"
+    assert s.board[4] == "O"
+    assert ("O", 4) in s.history
+    assert "verified" in points(effects)
+
+
+def test_mismatch_stays_quiet_on_identical_frames():
+    """While frozen on the same wrong page, no re-announcing every frame."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    f.step(s, ControlEvent("engine_move", cell=4))
+    wrong = list(s.board)
+    wrong[2] = "O"
+    feed(f, s, wrong, P.k_stable)
+    assert s.state == "MISMATCH"
+    effects = feed(f, s, wrong, 10)            # same wrong page, 10 more frames
+    assert points(effects) == []
+    assert s.mismatches == 1
+
+
+def test_human_turn_mismatch_heals_after_erasing_extra_mark():
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X", "X"] + [""] * 7, P.k_stable)
+    assert s.state == "MISMATCH"
+    effects = feed(f, s, ["X"] + [""] * 8, P.k_stable)   # one X erased
+    assert s.board[0] == "X"
+    assert s.state == "AGENT_TURN"
+    assert any(isinstance(e, EngineTurn) for e in effects)
+
+
 def test_illegal_two_cells_at_once_is_mismatch():
     f, s = fsm(), Session()
     start_to_human_turn(f, s)

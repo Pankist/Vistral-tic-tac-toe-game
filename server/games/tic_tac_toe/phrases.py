@@ -46,6 +46,12 @@ PHRASES: dict[str, list[str]] = {
         "The page shows {seen_mark} in {seen}; I expected {expected}. Fix it, or tell me to accept the reading.",
         "That's not what I called — {seen_mark} in {seen}, not {expected}. Your call: fix the page or I accept it.",
     ],
+    # {expected} cell, {a_mark} what was asked, {seen_mark} what's there
+    "mismatch_wrong_mark": [
+        "I asked for {a_mark} in the {expected} but I'm reading {seen_mark} there. Fix it, or tell me to accept the reading.",
+        "The {expected} has {seen_mark} where my {a_mark} should be. Redraw it, or tell me to accept.",
+        "That's {seen_mark} in the {expected} — I called {a_mark}. Fix the page or say the word.",
+    ],
     # illegal human move: {detail}
     "illegal": [
         "That doesn't parse as a legal move — {detail}. Fix the page or tell me to accept what I see.",

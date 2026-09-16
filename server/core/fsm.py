@@ -254,9 +254,21 @@ class FSM:
                 "cell": self.game.describe_cell(cell), "a_mark": new or "empty"}))
 
         if s.state == "MISMATCH":
-            # page changed again while frozen; keep describing, stay frozen
-            s.mismatch["seen"] = list(labels)
-            return effects + [LogEvent("mismatch_update", {"seen": list(labels)})]
+            # same wrong page as already challenged: stay quiet, stay frozen
+            if list(labels) == s.mismatch.get("seen"):
+                return effects
+            # the page changed while frozen — re-judge it as if we were back
+            # in the state the mismatch came from, so a corrected page heals
+            # the session by itself (and a differently-wrong one re-freezes
+            # with updated details)
+            from_state = s.mismatch.get("from", "HUMAN_TURN")
+            s.state = from_state if from_state in ("HUMAN_TURN", "AWAIT_DRAW") \
+                else "HUMAN_TURN"
+            s.expected_cell = (s.mismatch.get("expected_cell")
+                               if s.state == "AWAIT_DRAW" else None)
+            s.mismatch = None
+            return effects + self._resolve_stable(s, labels, conf,
+                                                  via_arbiter=via_arbiter)
 
         if s.state == "AWAIT_DRAW":
             expected = self.game.apply(s.board, s.expected_cell, self.game.agent_mark)
@@ -362,12 +374,19 @@ class FSM:
     def _mismatch_announce(self, s: Session, changed: list) -> list:
         cell, _, new = changed[0]
         exp = s.mismatch["expected_cell"]
+        log = LogEvent("mismatch", {"expected": exp, "changed": changed})
+        if exp is not None and cell == exp:
+            # right cell, wrong symbol — "X in top-right, not top-right" is
+            # not a sentence anyone should hear
+            return [Announce("mismatch_wrong_mark", {
+                        "expected": self.game.describe_cell(exp),
+                        "a_mark": self.game.agent_mark,
+                        "seen_mark": new or "an erased mark"}), log]
         return [Announce("mismatch", {
                     "expected": self.game.describe_cell(exp) if exp is not None
                     else "no change",
                     "seen": self.game.describe_cell(cell),
-                    "seen_mark": new or "an erased mark"}),
-                LogEvent("mismatch", {"expected": exp, "changed": changed})]
+                    "seen_mark": new or "an erased mark"}), log]
 
     def _resume_from_mismatch(self, s: Session) -> list:
         from_state = s.mismatch["from"] if s.mismatch else "HUMAN_TURN"
