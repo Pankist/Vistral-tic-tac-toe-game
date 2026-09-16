@@ -176,6 +176,57 @@ def test_await_draw_wrong_cell_is_mismatch():
     assert s.mismatch["expected_cell"] == 4
 
 
+def test_fast_play_o_plus_next_x_confirms_both():
+    """Human draws the asked-for O and their next X in one go — both moves
+    confirm in order instead of freezing on a mismatch."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    f.step(s, ControlEvent("engine_move", cell=4))
+    assert s.state == "AWAIT_DRAW"
+    both = list(s.board)
+    both[4] = "O"                              # the O it asked for
+    both[1] = "X"                              # plus the human's next move
+    effects = feed(f, s, both, P.k_stable)
+    assert s.board[4] == "O" and s.board[1] == "X"
+    assert ("O", 4) in s.history and ("X", 1) in s.history
+    assert s.state == "AGENT_TURN"
+    assert any(isinstance(e, EngineTurn) for e in effects)
+    assert "verified" in points(effects) and "react" in points(effects)
+
+
+def test_await_mismatch_reports_the_offending_cell():
+    """O landed where asked plus something illegal elsewhere: the challenge
+    must name the offending cell, not the correct O."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    f.step(s, ControlEvent("engine_move", cell=4))
+    wrong = list(s.board)
+    wrong[4] = "O"
+    wrong[2] = "O"                             # second O — not a legal fast play
+    effects = feed(f, s, wrong, P.k_stable)
+    assert s.state == "MISMATCH"
+    ann = [e for e in effects if isinstance(e, Announce) and e.point == "mismatch"]
+    assert ann and ann[0].ctx["seen"] == "top-right"
+
+
+def test_accept_reading_hands_turn_by_counts():
+    """Accepted page has more X than O: the agent must move, not wait."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    f.step(s, ControlEvent("engine_move", cell=4))
+    seen = list(s.board)
+    seen[2] = "O"                              # O in the wrong cell
+    seen[5] = "X"                              # plus an extra human X
+    feed(f, s, seen, P.k_stable)
+    assert s.state == "MISMATCH"
+    effects = f.step(s, ControlEvent("accept_reading"))
+    assert s.state == "AGENT_TURN"             # x=2, o=1 → agent's move
+    assert any(isinstance(e, EngineTurn) for e in effects)
+
+
 def test_mismatch_accept_reading_adopts_page():
     f, s = fsm(), Session()
     start_to_human_turn(f, s)

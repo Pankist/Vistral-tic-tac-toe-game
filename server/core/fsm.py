@@ -270,11 +270,40 @@ class FSM:
                                                  "mark": self.game.agent_mark,
                                                  "conf": conf})]
                 return effects + self._after_move(s, announce_point="verified")
+            # fast play: the asked-for mark landed AND exactly one legal human
+            # reply came with it — natural behavior, not a violation. Confirm
+            # both, in order.
+            extra = _diff(expected, labels)
+            if (labels[s.expected_cell] == self.game.agent_mark
+                    and len(extra) == 1 and extra[0][1] == ""
+                    and extra[0][2] == self.game.human_mark):
+                cell_o, cell_x = s.expected_cell, extra[0][0]
+                s.board = list(expected)
+                s.history.append((self.game.agent_mark, cell_o))
+                s.last_conf = conf
+                s.expected_cell = None
+                effects += [LogEvent("confirm", {"cell": cell_o,
+                                                 "mark": self.game.agent_mark,
+                                                 "conf": conf, "fast_play": True})]
+                if self.game.winner(s.board) or self.game.is_draw(s.board):
+                    return effects + self._after_move(s, announce_point="verified")
+                effects.append(Announce("verified"))
+                s.board = list(labels)
+                s.history.append((self.game.human_mark, cell_x))
+                effects += [LogEvent("confirm", {"cell": cell_x,
+                                                 "mark": self.game.human_mark,
+                                                 "conf": conf, "fast_play": True})]
+                return effects + self._after_human_move(s, cell_x)
             self._enter_mismatch(
                 s, seen=list(labels),
                 detail=f"expected {self.game.agent_mark} in "
                        f"{self.game.describe_cell(s.expected_cell)}")
-            return effects + self._mismatch_announce(s, changed)
+            # report the OFFENDING change, not whichever diff comes first —
+            # the asked-for mark may well be among the changes and correct
+            offending = [ch for ch in changed
+                         if not (ch[0] == s.mismatch["expected_cell"]
+                                 and ch[2] == self.game.agent_mark)] or changed
+            return effects + self._mismatch_announce(s, offending)
 
         # HUMAN_TURN / CONFIRMING
         legal = (len(changed) == 1
@@ -365,8 +394,7 @@ class FSM:
             landed = agent_cells[-1] if agent_cells else expected_cell
             if landed is not None:
                 s.history.append((self.game.agent_mark, landed))
-            return effects + self._after_move(s, announce_point=None)
-        # human-turn mismatch accepted: infer whose turn from mark counts
+        # whatever was accepted, mark counts say whose turn it is now
         x = sum(1 for m in s.board if m == self.game.human_mark)
         o = sum(1 for m in s.board if m == self.game.agent_mark)
         winner = self.game.winner(s.board)
