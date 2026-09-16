@@ -64,6 +64,11 @@ def _quad_ok(quad: np.ndarray, sa: float, sb: float, h: int, w: int) -> bool:
     if (quad[:, 0].min() < -0.5 * w or quad[:, 0].max() > 1.5 * w
             or quad[:, 1].min() < -0.5 * h or quad[:, 1].max() > 1.5 * h):
         return False
+    # a drawn '#' center cell is roughly square; extreme spacing asymmetry is
+    # the actual signature of a sliver lock (area alone can't catch it: for
+    # consistent lines, area ≈ sa*sb/sin θ, never small)
+    if not (0.35 <= sa / max(sb, 1e-6) <= 2.85):
+        return False
     q32 = quad.astype(np.float32)
     area = cv2.contourArea(q32)
     if not (0.4 * sa * sb <= area <= 2.5 * sa * sb):

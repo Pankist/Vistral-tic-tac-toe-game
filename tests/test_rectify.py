@@ -113,8 +113,12 @@ def test_quad_sanity_rejects_slivers():
     assert rectify_grid._quad_ok(square, 100, 100, 480, 640)
     rot = np.array([[150, 80], [220, 150], [150, 220], [80, 150]], float)
     assert rectify_grid._quad_ok(rot, 100, 100, 480, 640)
+    # a sliver comes with wildly asymmetric family spacings
     sliver = np.array([[100, 100], [600, 110], [605, 122], [110, 115]], float)
-    assert not rectify_grid._quad_ok(sliver, 100, 100, 480, 640)
+    assert not rectify_grid._quad_ok(sliver, 500, 13, 480, 640)
+    # and a shear-collapsed quad fails on corner angles
+    shear = np.array([[100, 100], [200, 100], [290, 120], [190, 120]], float)
+    assert not rectify_grid._quad_ok(shear, 100, 100, 480, 640)
     offscreen = square + [2000, 0]
     assert not rectify_grid._quad_ok(offscreen, 100, 100, 480, 640)
 

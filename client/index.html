@@ -220,7 +220,7 @@
     </section>
     <section class="panel voice" id="voicePanel">
       <div class="phead"><div class="ptitle" id="voiceTitle">AGENT</div>
-        <div class="pmeta" id="voiceMeta">voice on</div></div>
+        <button class="toggle" id="voiceToggle">voice off</button></div>
       <div id="utter">Connecting to the agent…</div>
       <div id="mmButtons">
         <button id="btnAccept">Accept the reading</button>
@@ -253,7 +253,7 @@
   let cfg = { fps: 4, jpeg_quality: 0.7, k_stable: 4, t_motion: 6.0,
               game: 'tic_tac_toe', engine: 'minimax' };
   let ws = null, wsOpen = false, retryTimer = null, retryLeft = 0;
-  let stream = null, sendTimer = null, speaking = true;
+  let stream = null, sendTimer = null, speaking = false;
   let lastState = null, lastFsm = '';
   // gated/no-grid frames carry no cells/corners; keep the last real reading
   // on screen so the view doesn't strobe at frame rate
@@ -288,7 +288,7 @@
       fetch(HTTP_BASE + '/config').then(r => r.json()).then(c => {
         cfg = c; $('gameBadge').textContent = c.game;
         speaking = c.voice !== 'off';
-        $('voiceMeta').textContent = speaking ? 'voice on' : 'voice off';
+        $('voiceToggle').textContent = speaking ? 'voice on' : 'voice off';
         tick(`config fps ${c.fps} engine ${c.engine} voice ${c.voice || 'on'}`);
       }).catch(() => {});
     };
@@ -490,12 +490,32 @@
     }
     $('utter').textContent = text;
     tick('speak "' + text.slice(0, 48) + (text.length > 48 ? '…"' : '"'));
-    if (speaking && 'speechSynthesis' in window) {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US'; u.rate = 1.05;
-      speechSynthesis.speak(u);
-    }
+    if (speaking) speakText(text);
+  }
+
+  // --- speech synthesis: best available voice, no cancel/speak race ------------
+  let voices = [];
+  function loadVoices() { voices = speechSynthesis.getVoices(); }
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+  function pickVoice() {
+    const en = voices.filter(v => v.lang.startsWith('en'));
+    return en.find(v => /premium|enhanced|natural|neural/i.test(v.name))
+        || en.find(v => v.name === 'Google US English')
+        || en.find(v => /samantha/i.test(v.name))
+        || en.find(v => v.lang === 'en-US') || en[0] || null;
+  }
+  function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const v = pickVoice();
+    if (v) u.voice = v;
+    u.lang = 'en-US'; u.rate = 1.03; u.pitch = 1.0;
+    // Chrome drops an utterance queued in the same tick as cancel()
+    setTimeout(() => { speechSynthesis.resume(); speechSynthesis.speak(u); }, 60);
   }
 
   // --- ticker -----------------------------------------------------------------------
@@ -524,10 +544,13 @@
     $('readGrid').style.display = showComposite ? 'none' : 'grid';
     $('viewToggle').textContent = showComposite ? 'cells' : 'composite';
   };
-  $('voiceMeta').onclick = () => {
+  $('voiceToggle').onclick = () => {
     speaking = !speaking;
-    $('voiceMeta').textContent = speaking ? 'voice on' : 'voice off';
-    if (!speaking) speechSynthesis?.cancel();
+    $('voiceToggle').textContent = speaking ? 'voice on' : 'voice off';
+    // the click is the user gesture that unlocks speech synthesis in Chrome —
+    // speaking here primes the engine and confirms audibly in one move
+    if (speaking) speakText('Voice on.');
+    else speechSynthesis?.cancel();
   };
 
   connect();

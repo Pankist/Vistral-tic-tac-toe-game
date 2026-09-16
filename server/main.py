@@ -11,6 +11,7 @@ import json
 import time
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
 from server.core import config as cfg
@@ -27,6 +28,9 @@ from server.perception.pipeline import Pipeline
 from server.perception.types import CellRead, PerceptionResult
 
 app = FastAPI(title="visual-gamer-agent")
+# the client is served from localhost while the backend sits behind the ALB —
+# without CORS the /config fetch fails silently and the client runs on defaults
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET"])
 
 # effective config is always visible: printed at boot
 _merged = cfg.merged()
