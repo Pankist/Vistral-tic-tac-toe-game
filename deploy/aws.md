@@ -2,10 +2,13 @@
 
 Account PVLX (415144300182), region us-east-1. Everything lives in a
 dedicated VPC so the whole system tears down cleanly. Deploy is git-based:
-the instance user-data clones this repo, runs `make setup` **and `make test`
+the instance bootstrap clones this repo, runs `make setup` **and `make test`
 — a red suite never becomes a running service** — then installs the systemd
 unit. The OpenRouter key never touches git: it sits in SSM Parameter Store
 and the instance role is allowed to read exactly that one parameter.
+
+Ubuntu 24.04 note: there is no `awscli` apt package on noble — the bootstrap
+uses `snap install aws-cli --classic` to fetch the SSM parameter.
 
 | Piece | Value |
 |---|---|
@@ -22,9 +25,12 @@ and the instance role is allowed to read exactly that one parameter.
 Client stays local (camera needs a secure context; localhost qualifies):
 
 ```bash
-make client        # serves client/ on http://localhost:3000
-open "http://localhost:3000/index.html?backend=ws://vistral-ttt-1566484477.us-east-1.elb.amazonaws.com/ws"
+make client        # serves client/ on http://localhost:3000 (CLIENT_PORT=3001 if taken)
+open http://localhost:3000
 ```
+
+The ALB is the client's built-in default backend — no query string needed;
+`?backend=ws://...` overrides it for any other host.
 
 Fallback is one param: drop `?backend=` and run `make dev` to flip the whole
 demo to localhost if the venue network misbehaves.

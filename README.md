@@ -26,10 +26,10 @@ Dry run without a camera: open `http://localhost:8000?dev=1` and use the simulat
 
 ## How to play
 
-1. **Calibration.** Hold the camera steady over the page. When the agent locks the grid it tells you so, with its confidence. The debug pane (toggle in the UI) shows what it sees: raw frame, rectified board, per-cell reads.
+1. **Calibration.** Hold the camera steady over the page. When the agent locks the grid it tells you so, with its confidence. The debug pane (toggle in the UI) shows what it sees: raw frame, rectified board, per-cell reads. A page with a game already on it works too: the marks become the starting position, and mark counts decide whose turn it is ("2 X and 1 O already played — my move").
 2. **Your move.** Draw an X in any cell, then take your hand out of frame. The agent ignores frames while your hand is moving and accepts a mark only after it's been stable for several frames — expect ~1–2s from pen-up to acknowledgment.
-3. **Its move.** The agent announces its cell on screen and out loud. **You draw its O** in that cell. It watches, confirms the mark landed where it asked, and hands the turn back.
-4. **Disagreements.** If the page doesn't match what the agent expects — wrong cell, ambiguous mark — it says so and asks: fix the page, or tell it to accept the reading. If it's unsure about a mark, it takes a closer look (one vision-model call) before deciding.
+3. **Its move.** The agent announces its cell on screen and (voice on) out loud. **You draw its O** in that cell. It watches, confirms the mark landed where it asked, and hands the turn back. Drawing its O and your next X in one go is fine — it confirms both, in order.
+4. **Disagreements.** If the page doesn't match what the agent expects — wrong cell, ambiguous mark — it says so and asks: fix the page, or tell it to accept the reading. Fixing the ink is enough on its own: the agent re-judges the corrected page and play continues without a click. If it's unsure about a mark, it takes a closer look (one vision-model call) before deciding.
 5. Play to win or draw. At game end it reports the result and what it logged for next time.
 
 Tips: even, non-glare lighting; keep the page flat and the camera fixed; draw thick marks that fill most of the cell.
@@ -40,7 +40,7 @@ Behavior lives in two git-tracked config files; `.env` holds only secrets and de
 
 | Where | Keys | Meaning |
 |---|---|---|
-| `server/core/config.py` | `ACTIVE_GAME`, `FPS`, `T_motion`, `K_STABLE`, `RECTIFY`, `ANNOUNCER`, model names | System mechanics: which game is mounted, how frames are read and gated, rectification mode, how the agent speaks |
+| `server/core/config.py` | `ACTIVE_GAME`, `FPS`, `T_MOTION`, `K_STABLE`, `RECTIFY`, `ANNOUNCER`, `VOICE`, model names | System mechanics: which game is mounted, how frames are read and gated, rectification mode, how the agent speaks (`VOICE="off"` boots the client silent; the UI can toggle per session) |
 | `server/games/tic_tac_toe/config.py` | `DEFAULT_ENGINE`, `STRENGTH`, `T_empty`, classification cutoffs, `T_arbiter` | Game settings: engine choice, opponent strength, perception thresholds for this game |
 
 ## Architecture in one paragraph
@@ -72,13 +72,14 @@ sudo cp deploy/ttt-agent.service /etc/systemd/system/ && sudo systemctl enable -
 
 The exact AWS topology used for the live demo (dedicated VPC, EC2, ALB) is recorded in `deploy/aws.md`.
 
-Behind an ALB: target group → :8000, health check `GET /health`, **idle timeout 600s** (the default 60s kills long-lived WebSockets). Point the local client at it with `http://localhost:8000?backend=ws://<alb-dns>/ws`. Keep the client local — camera capture requires a secure context, which localhost is.
+Behind an ALB: target group → :8000, health check `GET /health`, **idle timeout 600s** (the default 60s kills long-lived WebSockets). The client ships with the deployed ALB as its default backend (`DEPLOYED_BACKEND` in `client/index.html`); `?backend=ws://<host>/ws` overrides it, and a page served by the FastAPI app itself talks to its own host. Keep the client local — camera capture requires a secure context, which localhost is. Serve it with `make client` (`CLIENT_PORT=3001` if 3000 is taken).
 
 ## Troubleshooting
 
 - **No camera prompt** — you're not on localhost / a secure context; serve the client locally.
 - **Grid won't lock** — fix glare, flatten the page, redraw the `#` with thicker strokes; watch the reprojection number in the debug pane.
-- **Marks not registering** — draw thicker, fill more of the cell, keep your hand fully out of frame; watch the per-cell reads in the debug pane.
+- **Marks not registering** — draw thicker, fill more of the cell, keep your hand fully out of frame; watch the per-cell reads in the debug pane. A thick marker beats a ballpoint every time, though thin pens do work.
+- **Wrong lock on a dark desk** — the detector only accepts lines that are ink-dark with equally bright paper on both sides, which rejects paper edges and shadows; if a lock still looks wrong, check for glare and stray doodles near the grid (ink outside the grid but within a cell's reach is read as a mark — that's the stated assumption).
 - **Everything looks right but it's wrong** — read `runs/events.jsonl` for the last confirm: it records exactly what perception saw and why the FSM did what it did.
 
 ## Repo map
