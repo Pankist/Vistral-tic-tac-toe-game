@@ -70,12 +70,15 @@ def _residual(line: np.ndarray, segs: np.ndarray, members: list[int]) -> float:
 
 
 def _is_ink_stroke(gray: np.ndarray, line: np.ndarray, segs: np.ndarray,
-                   members: list[int], probe: int = 8, margin: int = 12) -> bool:
-    """A grid line is drawn ink: dark, with bright paper on BOTH sides.
+                   members: list[int], margin: int = 12) -> bool:
+    """A grid line is drawn ink: dark, with bright paper on BOTH sides, and
+    the two sides are roughly EQUALLY bright.
 
-    This is what rejects paper edges and shadow boundaries — they are strong
-    Hough lines but bright on one side only. Samples along the members' span;
-    a majority of samples must be darker than both perpendicular probes.
+    Both halves matter. Darker-than-both rejects most non-ink lines; the
+    symmetry test is what reliably kills paper edges and shadow boundaries —
+    paper on one side and dark desk on the other is a huge asymmetry no pen
+    stroke produces. Probes are medians of 3 offsets per side, because a
+    single textured-background pixel is too noisy to compare against.
     """
     h, w = gray.shape
     a, b, c = line
@@ -86,17 +89,29 @@ def _is_ink_stroke(gray: np.ndarray, line: np.ndarray, segs: np.ndarray,
     pts = np.vstack([segs[members][:, :2], segs[members][:, 2:]])
     ts = (pts - p0) @ d
     good = total = 0
-    for t in np.linspace(ts.min(), ts.max(), 15):
+    for t in np.linspace(ts.min(), ts.max(), 21):
         p = p0 + t * d
+
+        def sample(sign: int) -> int | None:
+            vals = []
+            for probe in (7, 10, 13):
+                x = int(round(p[0] + sign * probe * n[0]))
+                y = int(round(p[1] + sign * probe * n[1]))
+                if 0 <= x < w and 0 <= y < h:
+                    vals.append(int(gray[y, x]))
+            return int(np.median(vals)) if len(vals) == 3 else None
+
         x, y = int(round(p[0])), int(round(p[1]))
-        xp, yp = int(round(p[0] + probe * n[0])), int(round(p[1] + probe * n[1]))
-        xm, ym = int(round(p[0] - probe * n[0])), int(round(p[1] - probe * n[1]))
-        if not (1 <= x < w - 1 and 1 <= y < h - 1
-                and 0 <= xp < w and 0 <= yp < h and 0 <= xm < w and 0 <= ym < h):
+        if not (1 <= x < w - 1 and 1 <= y < h - 1):
+            continue
+        vp, vm = sample(+1), sample(-1)
+        if vp is None or vm is None:
             continue
         total += 1
         v0 = int(gray[y - 1:y + 2, x - 1:x + 2].min())   # stroke center ± fit slack
-        if v0 + margin < gray[yp, xp] and v0 + margin < gray[ym, xm]:
+        bright_both = min(vp, vm) - v0 >= margin
+        symmetric = abs(vp - vm) <= 0.6 * (max(vp, vm) - v0)
+        if bright_both and symmetric:
             good += 1
     return total >= 6 and good / total >= 0.55
 
@@ -104,10 +119,16 @@ def _is_ink_stroke(gray: np.ndarray, line: np.ndarray, segs: np.ndarray,
 def find_grid(gray: np.ndarray, canonical: int = 330) -> GridFit | None:
     h, w = gray.shape
     short = min(h, w)
-    edges = cv2.Canny(gray, 50, 150)
+    # Canny alone misses faint thin pen strokes at capture scale; union it with
+    # the same local ink binarization the cell reader uses, so a ballpoint '#'
+    # is as much a line source as a fat marker one.
+    edges = cv2.Canny(gray, 40, 120)
+    ink = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                cv2.THRESH_BINARY_INV, 35, 10)
+    edges = cv2.bitwise_or(edges, ink)
     segs = cv2.HoughLinesP(
-        edges, 1, np.pi / 180, threshold=40,
-        minLineLength=int(short * 0.20), maxLineGap=int(short * 0.03),
+        edges, 1, np.pi / 180, threshold=35,
+        minLineLength=int(short * 0.16), maxLineGap=int(short * 0.04),
     )
     if segs is None or len(segs) < 4:
         return None

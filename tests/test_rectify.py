@@ -77,6 +77,35 @@ def test_locks_on_strokes_not_paper_edges():
     assert sum(1 for c in cells if c.mark) == 1      # nothing phantom
 
 
+def test_faint_thin_strokes_on_tilted_paper_with_textured_desk():
+    """Regression: thin ballpoint (~2px, low contrast) on a tilted page over
+    textured dark leather. Both prior failure modes at once: the strokes must
+    still register as lines, and the tilted paper edges must lose."""
+    rng = np.random.default_rng(3)
+    img = (55 + rng.integers(-18, 18, (480, 640))).clip(0, 255).astype(np.uint8)
+    paper = np.array([[150, 90], [590, 60], [610, 400], [130, 430]], np.int32)
+    cv2.fillPoly(img, [paper], 212)
+    cx, cy, third = 370, 240, 85
+    for k in (0, 1):
+        p = -third // 2 + k * third
+        cv2.line(img, (cx + p + 6, cy - 130), (cx + p, cy + 130), 150, 2, cv2.LINE_AA)
+        cv2.line(img, (cx - 130, cy + p), (cx + 130, cy + p - 5), 150, 2, cv2.LINE_AA)
+    m = int(third * 0.28)
+    cv2.line(img, (cx - m, cy - m), (cx + m, cy + m), 140, 3, cv2.LINE_AA)
+    cv2.line(img, (cx + m, cy - m), (cx - m, cy + m), 140, 3, cv2.LINE_AA)
+
+    fit = rectify_grid.find_grid(img)
+    assert fit is not None, "no lock on faint strokes"
+    # the lock must be the drawn grid, not the page: center-cell corners sit
+    # near the true intersections, whose pairwise spread is one cell (~85px)
+    quad = np.array(fit.corners)
+    span = max(quad[:, 0].max() - quad[:, 0].min(),
+               quad[:, 1].max() - quad[:, 1].min())
+    assert span < 400, f"lock spans {span:.0f}px — that's the paper, not the grid"
+    cells = read_cells(rectify_grid.warp(img, fit))
+    assert cells[4].mark == "X"
+
+
 def test_end_to_end_marks_through_rectification():
     img, (cx, cy), third, M = draw_hash(angle_deg=8)
 
