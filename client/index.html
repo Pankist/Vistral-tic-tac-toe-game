@@ -500,22 +500,28 @@
     loadVoices();
     speechSynthesis.onvoiceschanged = loadVoices;
   }
+  let announcedVoice = false;
   function pickVoice() {
     const en = voices.filter(v => v.lang.startsWith('en'));
-    return en.find(v => /premium|enhanced|natural|neural/i.test(v.name))
+    const local = en.filter(v => v.localService);   // remote voices fail silently
+    return local.find(v => /premium|enhanced|natural|neural|siri/i.test(v.name))
+        || local.find(v => /samantha/i.test(v.name))
         || en.find(v => v.name === 'Google US English')
-        || en.find(v => /samantha/i.test(v.name))
+        || local.find(v => v.lang === 'en-US')
         || en.find(v => v.lang === 'en-US') || en[0] || null;
   }
   function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
+    speechSynthesis.resume();
     const u = new SpeechSynthesisUtterance(text);
     const v = pickVoice();
-    if (v) u.voice = v;
-    u.lang = 'en-US'; u.rate = 1.03; u.pitch = 1.0;
-    // Chrome drops an utterance queued in the same tick as cancel()
-    setTimeout(() => { speechSynthesis.resume(); speechSynthesis.speak(u); }, 60);
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
+    u.rate = 1.03; u.pitch = 1.0;
+    u.onerror = e => tick('speech error: ' + (e.error || 'unknown'), 'err');
+    if (v && !announcedVoice) { announcedVoice = true; tick('voice: ' + v.name); }
+    window.__u = u;                 // keep a reference — Chrome GC can kill speech
+    speechSynthesis.speak(u);       // immediate: deferring loses user activation
   }
 
   // --- ticker -----------------------------------------------------------------------
