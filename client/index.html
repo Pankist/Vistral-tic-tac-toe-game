@@ -273,7 +273,10 @@
     ws.onopen = () => {
       wsOpen = true; $('wsDot').classList.add('on'); $('wsText').textContent = 'ws connected';
       fetch(HTTP_BASE + '/config').then(r => r.json()).then(c => {
-        cfg = c; $('gameBadge').textContent = c.game; tick(`config fps ${c.fps} engine ${c.engine}`);
+        cfg = c; $('gameBadge').textContent = c.game;
+        speaking = c.voice !== 'off';
+        $('voiceMeta').textContent = speaking ? 'voice on' : 'voice off';
+        tick(`config fps ${c.fps} engine ${c.engine} voice ${c.voice || 'on'}`);
       }).catch(() => {});
     };
     ws.onclose = () => {

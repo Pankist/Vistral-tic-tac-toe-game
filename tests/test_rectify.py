@@ -55,6 +55,28 @@ def test_rejects_single_line():
     assert rectify_grid.find_grid(img) is None
 
 
+def test_locks_on_strokes_not_paper_edges():
+    """Regression: paper on a dark surface. The paper boundary produces the
+    longest, strongest lines in the frame; the lock must land on the drawn
+    ink, which is dark with bright paper on both sides."""
+    img = np.full((480, 640), 55, np.uint8)          # dark desk
+    cv2.rectangle(img, (140, 60), (560, 420), 215, -1)  # bright paper, hard edges
+    cx, cy, third = 350, 240, 80
+    for k in (0, 1):
+        p = -third // 2 + k * third
+        cv2.line(img, (cx + p, cy - 130), (cx + p, cy + 130), 45, 3, cv2.LINE_AA)
+        cv2.line(img, (cx - 130, cy + p), (cx + 130, cy + p), 45, 3, cv2.LINE_AA)
+    m = int(third * 0.28)
+    cv2.line(img, (cx - m, cy - m), (cx + m, cy + m), 30, 4, cv2.LINE_AA)
+    cv2.line(img, (cx + m, cy - m), (cx - m, cy + m), 30, 4, cv2.LINE_AA)
+
+    fit = rectify_grid.find_grid(img)
+    assert fit is not None
+    cells = read_cells(rectify_grid.warp(img, fit))
+    assert cells[4].mark == "X"
+    assert sum(1 for c in cells if c.mark) == 1      # nothing phantom
+
+
 def test_end_to_end_marks_through_rectification():
     img, (cx, cy), third, M = draw_hash(angle_deg=8)
 

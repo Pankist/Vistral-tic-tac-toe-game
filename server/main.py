@@ -52,6 +52,7 @@ def get_config():
         "k_stable": cfg.K_STABLE, "t_motion": cfg.T_MOTION,
         "game": cfg.ACTIVE_GAME, "engine": gcfg.DEFAULT_ENGINE,
         "announcer": cfg.ANNOUNCER, "rectify": cfg.RECTIFY,
+        "voice": cfg.VOICE,
     }
 
 

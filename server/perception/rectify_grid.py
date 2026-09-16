@@ -69,6 +69,38 @@ def _residual(line: np.ndarray, segs: np.ndarray, members: list[int]) -> float:
     return float(np.mean(np.abs(a * pts[:, 0] + b * pts[:, 1] + c) / np.hypot(a, b)))
 
 
+def _is_ink_stroke(gray: np.ndarray, line: np.ndarray, segs: np.ndarray,
+                   members: list[int], probe: int = 8, margin: int = 12) -> bool:
+    """A grid line is drawn ink: dark, with bright paper on BOTH sides.
+
+    This is what rejects paper edges and shadow boundaries — they are strong
+    Hough lines but bright on one side only. Samples along the members' span;
+    a majority of samples must be darker than both perpendicular probes.
+    """
+    h, w = gray.shape
+    a, b, c = line
+    norm = np.hypot(a, b)
+    n = np.array([a, b]) / norm
+    d = np.array([-b, a]) / norm
+    p0 = -c / norm * n
+    pts = np.vstack([segs[members][:, :2], segs[members][:, 2:]])
+    ts = (pts - p0) @ d
+    good = total = 0
+    for t in np.linspace(ts.min(), ts.max(), 15):
+        p = p0 + t * d
+        x, y = int(round(p[0])), int(round(p[1]))
+        xp, yp = int(round(p[0] + probe * n[0])), int(round(p[1] + probe * n[1]))
+        xm, ym = int(round(p[0] - probe * n[0])), int(round(p[1] - probe * n[1]))
+        if not (1 <= x < w - 1 and 1 <= y < h - 1
+                and 0 <= xp < w and 0 <= yp < h and 0 <= xm < w and 0 <= ym < h):
+            continue
+        total += 1
+        v0 = int(gray[y - 1:y + 2, x - 1:x + 2].min())   # stroke center ± fit slack
+        if v0 + margin < gray[yp, xp] and v0 + margin < gray[ym, xm]:
+            good += 1
+    return total >= 6 and good / total >= 0.55
+
+
 def find_grid(gray: np.ndarray, canonical: int = 330) -> GridFit | None:
     h, w = gray.shape
     short = min(h, w)
@@ -84,8 +116,25 @@ def find_grid(gray: np.ndarray, canonical: int = 330) -> GridFit | None:
     lengths = np.hypot(dx, dy)
     angles = np.arctan2(dy, dx) % np.pi
 
-    # two orthogonal families, seeded by the longest segment's direction
-    theta0 = angles[np.argmax(lengths)]
+    # seed candidate family directions from the longest segments — but don't
+    # trust any single one (the longest line in frame is often a paper edge,
+    # not the grid); try distinct angles until a seed yields a valid 2+2 fit
+    seeds, order = [], np.argsort(-lengths)
+    for i in order:
+        if all(_ang_dist(angles[i], s) > np.deg2rad(15)
+               and _ang_dist(angles[i], s + np.pi / 2) > np.deg2rad(15)
+               for s in seeds):
+            seeds.append(float(angles[i]))
+        if len(seeds) == 4:
+            break
+    for theta0 in seeds:
+        fit = _try_seed(gray, segs, lengths, angles, theta0, short, canonical)
+        if fit is not None:
+            return fit
+    return None
+
+
+def _try_seed(gray, segs, lengths, angles, theta0, short, canonical):
     fam_a = [i for i in range(len(segs)) if _ang_dist(angles[i], theta0) < ANGLE_TOL]
     fam_b = [i for i in range(len(segs))
              if _ang_dist(angles[i], theta0 + np.pi / 2) < ANGLE_TOL]
@@ -106,15 +155,21 @@ def find_grid(gray: np.ndarray, canonical: int = 330) -> GridFit | None:
                          (segs[idx, 1] + segs[idx, 3]) / 2], axis=1)
         offsets = mids @ normal
         clusters = _cluster_offsets(offsets, lengths[idx], gap=short * GAP_FRAC)
-        if len(clusters) < 2:
+        # fit every cluster and keep only real ink strokes (kills paper edges)
+        fitted = []
+        for center, weight, members in clusters:
+            gidx = list(idx[members])
+            line = _fit_family_line(segs, gidx)
+            if _is_ink_stroke(gray, line, segs, gidx):
+                fitted.append((center, weight, gidx, line))
+        if len(fitted) < 2:
             return None
-        clusters.sort(key=lambda c: -c[1])
-        top2 = sorted(clusters[:2], key=lambda c: c[0])
+        fitted.sort(key=lambda f: -f[1])
+        top2 = sorted(fitted[:2], key=lambda f: f[0])
         if not (MIN_SPACING * short < abs(top2[1][0] - top2[0][0]) < MAX_SPACING * short):
             return None
-        for _, _, members in top2:
-            line = _fit_family_line(segs, list(idx[members]))
-            total_residual += _residual(line, segs, list(idx[members]))
+        for _, _, gidx, line in top2:
+            total_residual += _residual(line, segs, gidx)
             lines.append(line)
 
     # 4 intersections of the 2x2 dominant lines = center cell corners
