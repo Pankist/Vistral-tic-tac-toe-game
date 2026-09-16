@@ -228,8 +228,14 @@
   const qs = new URLSearchParams(location.search);
   const DEV = qs.get('dev') === '1';
   const OBSERVER = qs.get('role') === 'observer';
+  // Default backend is the deployed system; ?backend=ws://... overrides.
+  // When the page is served by the FastAPI app itself (make dev, port 8000),
+  // it talks to its own host so the local fallback needs no param either.
+  const DEPLOYED_BACKEND = 'ws://vistral-ttt-1566484477.us-east-1.elb.amazonaws.com/ws';
   const BACKEND = qs.get('backend') ||
-    (location.protocol === 'https:' ? 'wss://' : 'ws://') + (location.host || 'localhost:8000') + '/ws';
+    (location.port === '8000'
+      ? (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws'
+      : DEPLOYED_BACKEND);
   const HTTP_BASE = BACKEND.replace(/^ws/, 'http').replace(/\/ws$/, '');
   const CELL_NAMES = ['top-left','top-center','top-right','middle-left','center',
                       'middle-right','bottom-left','bottom-center','bottom-right'];
