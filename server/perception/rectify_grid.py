@@ -55,6 +55,33 @@ def _cluster_offsets(offsets: np.ndarray, weights: np.ndarray, gap: float):
     return out
 
 
+def _quad_ok(quad: np.ndarray, sa: float, sb: float, h: int, w: int) -> bool:
+    """The center cell must be a plausible quadrilateral before it becomes a
+    homography. A page mid-motion (lifted, curled, half out of frame) can
+    yield a 2+2 line fit whose intersections are nearly collinear — a sliver
+    quad that smears ink across every cell. Reject on area vs the measured
+    line spacings, convexity, corner angles, and being wildly out of frame."""
+    if (quad[:, 0].min() < -0.5 * w or quad[:, 0].max() > 1.5 * w
+            or quad[:, 1].min() < -0.5 * h or quad[:, 1].max() > 1.5 * h):
+        return False
+    q32 = quad.astype(np.float32)
+    area = cv2.contourArea(q32)
+    if not (0.4 * sa * sb <= area <= 2.5 * sa * sb):
+        return False
+    if not cv2.isContourConvex(q32):
+        return False
+    for i in range(4):
+        v1 = quad[(i - 1) % 4] - quad[i]
+        v2 = quad[(i + 1) % 4] - quad[i]
+        denom = np.linalg.norm(v1) * np.linalg.norm(v2)
+        if denom < 1e-6:
+            return False
+        ang = np.degrees(np.arccos(np.clip(v1 @ v2 / denom, -1, 1)))
+        if not 30 <= ang <= 150:
+            return False
+    return True
+
+
 def _fit_family_line(segs: np.ndarray, members: list[int]) -> np.ndarray:
     """Homogeneous line through all endpoints of the member segments."""
     pts = np.vstack([segs[members][:, :2], segs[members][:, 2:]]).astype(np.float32)
@@ -162,7 +189,7 @@ def _try_seed(gray, segs, lengths, angles, theta0, short, canonical):
     if len(fam_a) < 2 or len(fam_b) < 2:
         return None
 
-    lines, total_residual = [], 0.0
+    lines, total_residual, spacings = [], 0.0, []
     for fam in (fam_a, fam_b):
         idx = np.array(fam)
         # undirected angles: shift each member to the branch nearest the seed
@@ -187,8 +214,10 @@ def _try_seed(gray, segs, lengths, angles, theta0, short, canonical):
             return None
         fitted.sort(key=lambda f: -f[1])
         top2 = sorted(fitted[:2], key=lambda f: f[0])
-        if not (MIN_SPACING * short < abs(top2[1][0] - top2[0][0]) < MAX_SPACING * short):
+        spacing = abs(top2[1][0] - top2[0][0])
+        if not (MIN_SPACING * short < spacing < MAX_SPACING * short):
             return None
+        spacings.append(spacing)
         for _, _, gidx, line in top2:
             total_residual += _residual(line, segs, gidx)
             lines.append(line)
@@ -209,6 +238,9 @@ def _try_seed(gray, segs, lengths, angles, theta0, short, canonical):
     quad = pts[order]
     tl = np.argmin(quad.sum(axis=1))
     quad = np.roll(quad, -tl, axis=0)
+    h, w = gray.shape
+    if not _quad_ok(quad, spacings[0], spacings[1], h, w):
+        return None
 
     third = canonical / 3
     inner = np.array([[third, third], [2 * third, third],

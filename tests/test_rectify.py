@@ -106,6 +106,19 @@ def test_faint_thin_strokes_on_tilted_paper_with_textured_desk():
     assert cells[4].mark == "X"
 
 
+def test_quad_sanity_rejects_slivers():
+    """A page mid-motion can yield near-collinear intersections — a sliver
+    quad must never become a homography."""
+    square = np.array([[100, 100], [200, 100], [200, 200], [100, 200]], float)
+    assert rectify_grid._quad_ok(square, 100, 100, 480, 640)
+    rot = np.array([[150, 80], [220, 150], [150, 220], [80, 150]], float)
+    assert rectify_grid._quad_ok(rot, 100, 100, 480, 640)
+    sliver = np.array([[100, 100], [600, 110], [605, 122], [110, 115]], float)
+    assert not rectify_grid._quad_ok(sliver, 100, 100, 480, 640)
+    offscreen = square + [2000, 0]
+    assert not rectify_grid._quad_ok(offscreen, 100, 100, 480, 640)
+
+
 def test_end_to_end_marks_through_rectification():
     img, (cx, cy), third, M = draw_hash(angle_deg=8)
 
