@@ -15,6 +15,12 @@ PHRASES: dict[str, list[str]] = {
         "Board locked at {conf}%. You're X — your move.",
         "Got the grid, confidence {conf}%. Draw your X when ready.",
     ],
+    # {conf} percent, {xs}/{os} mark counts, {turn_line} — lock on a game in progress
+    "lock_resume": [
+        "I see the board — {xs} X and {os} O already played, confidence {conf}%. Resuming. {turn_line}",
+        "Board locked at {conf}%, mid-game: {xs} X, {os} O on the page. {turn_line}",
+        "Picking up where this page left off — {xs} X, {os} O. {turn_line}",
+    ],
     # {cell} name — reaction to the human's confirmed mark
     "react": [
         "{cell_cap} — noted.",

@@ -174,6 +174,9 @@ class SessionRunner:
                     self.pipeline.hint = list(self.session.board)
                     self.store.log_decision(eff.kind, eff.data)
                 else:
+                    if eff.kind == "board_lock":
+                        # prefilled marks anchor orientation from the start
+                        self.pipeline.hint = list(self.session.board)
                     self.store.log(eff.kind, eff.data)
         _last_fsm_state = self.session.state
 

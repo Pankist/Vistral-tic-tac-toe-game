@@ -53,6 +53,49 @@ def test_calibration_requires_consecutive_locks():
     assert points(effects) == ["lock"]
 
 
+def test_prefilled_board_resumes_human_turn():
+    """Lock on a page with a game in progress: marks become the board and
+    equal counts hand the turn to the human."""
+    f, s = fsm(), Session()
+    f.step(s, ControlEvent("start"))
+    b = ["X", "", "", "", "O", "", "", "", ""]
+    effects = feed(f, s, b, P.n_calib)
+    assert s.state == "HUMAN_TURN"
+    assert s.board == b
+    assert len(s.history) == 2
+    assert "lock_resume" in points(effects)
+
+
+def test_prefilled_board_resumes_agent_turn():
+    """x > o at lock: it's the agent's move — engine fires immediately."""
+    f, s = fsm(), Session()
+    f.step(s, ControlEvent("start"))
+    b = ["X", "", "", "", "O", "", "", "", "X"]
+    effects = feed(f, s, b, P.n_calib)
+    assert s.state == "AGENT_TURN"
+    assert any(isinstance(e, EngineTurn) for e in effects)
+
+
+def test_prefilled_finished_board_is_game_over():
+    f, s = fsm(), Session()
+    f.step(s, ControlEvent("start"))
+    b = ["X", "X", "X", "O", "O", "", "", "", ""]
+    effects = feed(f, s, b, P.n_calib)
+    assert s.state == "GAME_OVER"
+    assert any(isinstance(e, GameEnded) and e.result == "human" for e in effects)
+
+
+def test_calibration_needs_stable_readings_not_just_grid():
+    """A grid that reads differently every frame must not lock."""
+    f, s = fsm(), Session()
+    f.step(s, ControlEvent("start"))
+    for i in range(P.n_calib * 3):
+        b = [""] * 9
+        b[i % 2] = "X"                        # reading flaps between two cells
+        f.step(s, frame(b))
+    assert s.state == "CALIBRATING"
+
+
 def test_debounce_confirms_after_k_stable_frames():
     f, s = fsm(), Session()
     start_to_human_turn(f, s)

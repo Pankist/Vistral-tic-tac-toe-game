@@ -245,6 +245,9 @@
   let ws = null, wsOpen = false, retryTimer = null, retryLeft = 0;
   let stream = null, sendTimer = null, speaking = true;
   let lastState = null, lastFsm = '';
+  // gated/no-grid frames carry no cells/corners; keep the last real reading
+  // on screen so the view doesn't strobe at frame rate
+  let lastCells = [], lastCorners = null, lastGridKey = '';
 
   const $ = id => document.getElementById(id);
   if (OBSERVER) { document.body.classList.add('observer'); $('rolePill').textContent = 'OBSERVER'; }
@@ -374,9 +377,12 @@
     $('boardMeta').textContent = `move ${s.move_no}` +
       (s.fsm === 'MISMATCH' ? ' · frozen' : s.turn === 'agent' ? ' · agent O' : '');
 
-    renderReadGrid(s, t);
+    if (t.cells && t.cells.length) lastCells = t.cells;
+    if (t.corners) lastCorners = t.corners;
+    if (s.fsm === 'IDLE') { lastCells = []; lastCorners = null; }
+    renderReadGrid(s, lastCells);
     renderBoard(s);
-    drawOverlay(t);
+    drawOverlay(lastCorners);
 
     const mm = s.fsm === 'MISMATCH';
     $('voicePanel').classList.toggle('alert', mm);
@@ -384,8 +390,12 @@
     $('mmButtons').classList.toggle('show', mm);
   }
 
-  function renderReadGrid(s, t) {
-    const cells = t.cells || [];
+  function renderReadGrid(s, cells) {
+    // re-render only when the reading meaningfully changes — not per frame
+    const key = JSON.stringify([s.fsm, s.expected_cell, s.mismatch,
+      cells.map(c => [c.mark, c.conf < 0.75, c.ink.toFixed(2)])]);
+    if (key === lastGridKey) return;
+    lastGridKey = key;
     [...readGrid.children].forEach((el, i) => {
       const c = cells[i];
       const seenMark = c && c.mark;
@@ -426,7 +436,7 @@
     });
   }
 
-  function drawOverlay(t) {
+  function drawOverlay(corners) {
     const v = $('video'), ov = $('overlay');
     if (!v.videoWidth) { ov.width = 0; return; }
     const box = v.getBoundingClientRect();
@@ -434,11 +444,11 @@
     ov.style.left = v.offsetLeft + 'px'; ov.style.top = v.offsetTop + 'px';
     const ctx = ov.getContext('2d');
     ctx.clearRect(0, 0, ov.width, ov.height);
-    if (!t.corners) return;
+    if (!corners) return;
     const sc = box.width / 640;                       // server frame is 640 wide
     ctx.strokeStyle = '#35C9A3'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]);
     ctx.beginPath();
-    t.corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
+    corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
     ctx.closePath(); ctx.stroke();
   }
 
@@ -473,9 +483,12 @@
   }
 
   // --- controls ----------------------------------------------------------------------
-  $('btnStart').onclick = () => { send({ type: 'control', action: 'start' });
+  function clearReadCache() { lastCells = []; lastCorners = null; lastGridKey = ''; }
+  $('btnStart').onclick = () => { clearReadCache();
+                                  send({ type: 'control', action: 'start' });
                                   if (speaking) speechSynthesis?.cancel(); };
-  $('btnReset').onclick = () => send({ type: 'control', action: 'reset' });
+  $('btnReset').onclick = () => { clearReadCache();
+                                  send({ type: 'control', action: 'reset' }); };
   $('btnAccept').onclick = () => send({ type: 'control', action: 'accept_reading' });
   $('btnFix').onclick = () => send({ type: 'control', action: 'fix_page' });
   $('viewToggle').onclick = () => {

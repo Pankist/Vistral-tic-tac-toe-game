@@ -149,16 +149,22 @@ class FSM:
 
         if s.state == "CALIBRATING":
             if p.grid_found:
-                s.calib_streak += 1
+                labels = p.labels()
+                # lock needs N consecutive *identical readings*, not just N
+                # frames with some grid — a prefilled board must read stably
+                # before it becomes the starting truth
+                if labels == s.candidate:
+                    s.calib_streak += 1
+                else:
+                    s.candidate, s.calib_streak = labels, 1
                 if s.calib_streak >= self.p.n_calib:
-                    s.board = list(p.labels())
+                    s.board = list(labels)
+                    s.reset_candidate()
                     s.last_conf = _mean_conf(p)
-                    s.state = "HUMAN_TURN"
-                    return [Announce("lock", {"conf": int(s.last_conf * 100)}),
-                            LogEvent("board_lock", {"conf": s.last_conf,
-                                                    "board": s.board})]
+                    return self._lock(s)
             else:
                 s.calib_streak = 0
+                s.candidate = None
             return []
 
         if not p.grid_found:
@@ -167,6 +173,33 @@ class FSM:
         if s.state in ("HUMAN_TURN", "CONFIRMING", "AWAIT_DRAW", "MISMATCH"):
             return self._watch(s, p)
         return []
+
+    def _lock(self, s: Session) -> list:
+        """Board lock — empty page starts fresh; a prefilled position resumes:
+        the marks on the page become the confirmed board and mark counts say
+        whose turn it is. Ink is the source of truth, including old ink."""
+        effects = [LogEvent("board_lock", {"conf": s.last_conf, "board": s.board})]
+        x = sum(1 for m in s.board if m == self.game.human_mark)
+        o = sum(1 for m in s.board if m == self.game.agent_mark)
+        s.history = [(m, i) for i, m in enumerate(s.board) if m != ""]
+        if x == 0 and o == 0:
+            s.state = "HUMAN_TURN"
+            return [Announce("lock", {"conf": int(s.last_conf * 100)})] + effects
+        if self.game.winner(s.board) or self.game.is_draw(s.board):
+            s.state = "GAME_OVER"
+            w = self.game.winner(s.board)
+            s.result = ("draw" if not w
+                        else "human" if w == self.game.human_mark else "agent")
+            return effects + [GameEnded(result=s.result)]
+        resume_ctx = {"conf": int(s.last_conf * 100), "xs": x, "os": o}
+        if x > o:
+            s.state = "AGENT_TURN"
+            return [Announce("lock_resume", {**resume_ctx,
+                                             "turn_line": "My move — one second."}),
+                    EngineTurn()] + effects
+        s.state = "HUMAN_TURN"
+        return [Announce("lock_resume", {**resume_ctx,
+                                         "turn_line": "Your move."})] + effects
 
     def _watch(self, s: Session, p: PerceptionResult) -> list:
         labels = p.labels()
