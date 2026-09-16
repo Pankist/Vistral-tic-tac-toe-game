@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>visual-gamer-agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#12151A; --panel:#171B21; --line:#232830; --line2:#2A2F36;
+    --text:#E8E6DF; --muted:#9BA3AD; --faint:#5C646E; --dim:#4A525C;
+    --teal:#35C9A3; --amber:#E8A33D; --coral:#E2574C;
+    --cellbg:#10141A;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family:'Space Grotesk',sans-serif; height:100vh;
+         display:flex; flex-direction:column; overflow:hidden; }
+  .mono { font-family:'IBM Plex Mono',monospace; }
+  button { font-family:'Space Grotesk',sans-serif; font-size:14px; cursor:pointer;
+           height:44px; border-radius:8px; }
+  select { height:44px; background:#1A1E24; color:var(--text); border:1px solid var(--line2);
+           border-radius:8px; font-family:'IBM Plex Mono',monospace; font-size:12px;
+           padding:0 10px; max-width:210px; }
+
+  /* header */
+  header { height:64px; flex:none; padding:0 24px; display:flex; align-items:center;
+           gap:16px; border-bottom:1px solid var(--line); }
+  .wordmark { font-size:17px; font-weight:600; letter-spacing:.04em; }
+  .badge { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+           border:1px solid var(--line2); border-radius:999px; padding:3px 10px; }
+  .pillwrap { flex:1; display:flex; justify-content:center; min-width:0; }
+  #statePill { display:flex; align-items:center; gap:10px; border-radius:999px;
+               padding:8px 18px; border:1px solid; white-space:nowrap; overflow:hidden; }
+  #statePill .dot { width:9px; height:9px; border-radius:999px; flex:none; }
+  #statePill .label { font-size:14px; font-weight:500; letter-spacing:.06em; }
+  .pill-teal  { background:#0F211C; border-color:#1F4A3D; }
+  .pill-teal  .dot { background:var(--teal); } .pill-teal .label { color:#7FDFC4; }
+  .pill-amber { background:#23200F; border-color:#6B5A1E; }
+  .pill-amber .dot { background:var(--amber); } .pill-amber .label { color:#EFC26B; }
+  .pill-coral { background:#2A1512; border-color:#7A3229; }
+  .pill-coral .dot { background:var(--coral); } .pill-coral .label { color:#F0857B; }
+  .pill-grey  { background:#1A1E24; border-color:var(--line2); }
+  .pill-grey  .dot { background:var(--faint); } .pill-grey .label { color:var(--muted); }
+  .hcontrols { display:flex; align-items:center; gap:10px; }
+  .wsdot { display:flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace;
+           font-size:11px; color:var(--muted); }
+  .wsdot i { width:7px; height:7px; border-radius:999px; background:var(--coral); display:block; }
+  .wsdot.on i { background:var(--teal); }
+  .role { font-family:'IBM Plex Mono',monospace; font-size:11px; color:#0C1210;
+          background:var(--teal); border-radius:999px; padding:4px 10px; font-weight:500; }
+  #btnStart { padding:0 20px; background:var(--teal); color:#0C1210; border:none; font-weight:600; }
+  #btnReset { padding:0 18px; background:transparent; color:var(--text); border:1px solid var(--line2); }
+
+  /* main */
+  main { flex:1; min-height:0; padding:16px 20px; display:flex; gap:16px; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+           display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+  .phead { padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
+           border-bottom:1px solid var(--line); flex:none; }
+  .ptitle { font-size:13px; font-weight:500; letter-spacing:.08em; color:var(--muted); }
+  .pmeta { font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6E7680; }
+  .pstrip { padding:10px 16px; display:flex; gap:18px; border-top:1px solid var(--line);
+            font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted);
+            flex:none; flex-wrap:wrap; }
+  .col-cam, .col-agent { flex:1.15; }
+  .col-right { flex:1; display:flex; flex-direction:column; gap:16px; min-height:0; }
+
+  .camwrap { flex:1; background:#0C0F12; position:relative; min-height:0;
+             display:flex; align-items:center; justify-content:center; }
+  video { max-width:100%; max-height:100%; }
+  #overlay { position:absolute; pointer-events:none; }
+
+  .agentbody { flex:1; display:flex; align-items:center; justify-content:center;
+               padding:16px; min-height:0; position:relative; }
+  #readGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
+              width:min(348px, 100%); }
+  .rcell { aspect-ratio:1/1.05; background:var(--cellbg); border:1px solid var(--line);
+           border-radius:8px; display:flex; flex-direction:column; align-items:center;
+           justify-content:center; gap:4px; }
+  .rcell .m { font-size:28px; color:var(--dim); }
+  .rcell .t { font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--dim); }
+  .rcell.read { background:#14261F; border-color:var(--teal); }
+  .rcell.read .m { color:var(--teal); font-weight:600; }
+  .rcell.read .t { color:#7FB8A4; }
+  .rcell.low { background:#221D10; border-color:var(--amber); }
+  .rcell.low .m { color:var(--amber); }
+  .rcell.low .t { color:#C4933F; }
+  .rcell.await { background:#221D10; border:1px dashed var(--amber); }
+  .rcell.await .m { color:var(--amber); font-weight:500; }
+  .rcell.await .t { color:#C4933F; }
+  .rcell.bad { background:#2A1512; border-color:var(--coral); }
+  .rcell.bad .m { color:var(--coral); font-weight:600; }
+  .rcell.bad .t { color:#D98980; }
+  #debugImg { max-width:100%; max-height:100%; display:none; }
+  .toggle { background:transparent; border:1px solid var(--line2); color:var(--muted);
+            height:26px; border-radius:6px; font-size:11px; padding:0 10px;
+            font-family:'IBM Plex Mono',monospace; }
+
+  /* board */
+  .boardwrap { display:flex; justify-content:center; padding:18px; }
+  #board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px;
+           width:min(264px,100%); }
+  .bcell { aspect-ratio:1; background:var(--cellbg); border:1px solid var(--line);
+           border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .bcell svg { width:45%; height:45%; }
+  .bcell.await { background:#171612; border:1px dashed var(--amber); }
+  .bcell.bad { background:#1D1210; border-color:var(--coral);
+               font-family:'IBM Plex Mono',monospace; font-size:20px; color:var(--coral); }
+  .bcell.win { border-color:var(--teal); background:#14261F; }
+
+  /* voice */
+  .voice { flex:1; min-height:0; }
+  .voice.alert { border-color:#7A3229; }
+  .voice.alert .ptitle { color:#F0857B; }
+  #utter { padding:18px 18px 12px; font-size:18px; line-height:1.45; font-weight:500;
+           color:#F2F0E8; overflow-wrap:break-word; }
+  #uhist { padding:4px 18px 16px; display:flex; flex-direction:column; gap:8px;
+           font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6E7680;
+           overflow-y:auto; }
+  #mmButtons { display:none; padding:6px 18px 18px; gap:10px; }
+  #mmButtons.show { display:flex; }
+  #btnAccept { padding:0 18px; background:var(--amber); color:#1A1206; border:none; font-weight:600; }
+  #btnFix { padding:0 18px; background:transparent; color:var(--text); border:1px solid var(--line2); }
+
+  /* dev grid */
+  #devPanel { display:none; padding:10px 16px 16px; border-top:1px solid var(--line); }
+  #devPanel.show { display:block; }
+  #devPanel .lbl { font-family:'IBM Plex Mono',monospace; font-size:11px;
+                   color:var(--faint); margin-bottom:8px; }
+  #devGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+  #devGrid button { height:34px; background:#1A1E24; border:1px solid var(--line2);
+                    color:var(--muted); font-family:'IBM Plex Mono',monospace; font-size:12px; }
+  #devGrid button:hover { border-color:var(--teal); color:var(--teal); }
+
+  footer { height:38px; flex:none; padding:0 24px; display:flex; align-items:center;
+           gap:24px; border-top:1px solid var(--line); font-family:'IBM Plex Mono',monospace;
+           font-size:11px; color:var(--faint); overflow:hidden; white-space:nowrap; }
+  footer .hot { color:#8A929C; }
+  footer .err { color:var(--coral); }
+  .observer .hcontrols select, .observer #btnStart, .observer #btnReset,
+  .observer #mmButtons { display:none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex; align-items:baseline; gap:10px;">
+    <div class="wordmark">visual-gamer-agent</div>
+    <div class="badge" id="gameBadge">tic_tac_toe</div>
+  </div>
+  <div class="pillwrap">
+    <div id="statePill" class="pill-grey">
+      <div class="dot"></div><div class="label" id="stateLabel">DISCONNECTED</div>
+    </div>
+  </div>
+  <div class="hcontrols">
+    <div class="wsdot" id="wsDot"><i></i><span id="wsText">connecting</span></div>
+    <div class="role" id="rolePill">PLAYER</div>
+    <select id="camSelect" aria-label="Camera device"></select>
+    <button id="btnStart">Start</button>
+    <button id="btnReset">Reset</button>
+  </div>
+</header>
+
+<main>
+  <section class="panel col-cam">
+    <div class="phead"><div class="ptitle">CAMERA</div>
+      <div class="pmeta" id="camMeta">—</div></div>
+    <div class="camwrap">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div class="pstrip">
+      <div id="tFps">fps —</div>
+      <div id="tDiff">diff —</div>
+      <div id="tGate">gate —</div>
+      <div id="tLock">no grid</div>
+    </div>
+    <div id="devPanel">
+      <div class="lbl">simulate mark (dev) — click a cell</div>
+      <div id="devGrid"></div>
+    </div>
+  </section>
+
+  <section class="panel col-agent">
+    <div class="phead">
+      <div class="ptitle">AGENT'S VIEW · RECTIFIED</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div class="pmeta" id="rectMeta">330×330</div>
+        <button class="toggle" id="viewToggle">composite</button>
+      </div>
+    </div>
+    <div class="agentbody">
+      <div id="readGrid"></div>
+      <img id="debugImg" alt="debug composite">
+    </div>
+    <div class="pstrip">
+      <div id="tStreak">streak 0/4</div>
+      <div id="tArb">arbiter idle</div>
+      <div id="tWatch"></div>
+    </div>
+  </section>
+
+  <div class="col-right">
+    <section class="panel">
+      <div class="phead"><div class="ptitle">CONFIRMED BOARD</div>
+        <div class="pmeta" id="boardMeta">move 0</div></div>
+      <div class="boardwrap"><div id="board"></div></div>
+    </section>
+    <section class="panel voice" id="voicePanel">
+      <div class="phead"><div class="ptitle" id="voiceTitle">AGENT</div>
+        <div class="pmeta" id="voiceMeta">voice on</div></div>
+      <div id="utter">Connecting to the agent…</div>
+      <div id="mmButtons">
+        <button id="btnAccept">Accept the reading</button>
+        <button id="btnFix">I'll fix the page</button>
+      </div>
+      <div id="uhist"></div>
+    </section>
+  </div>
+</main>
+
+<footer id="ticker"></footer>
+
+<script>
+(() => {
+  const qs = new URLSearchParams(location.search);
+  const DEV = qs.get('dev') === '1';
+  const OBSERVER = qs.get('role') === 'observer';
+  const BACKEND = qs.get('backend') ||
+    (location.protocol === 'https:' ? 'wss://' : 'ws://') + (location.host || 'localhost:8000') + '/ws';
+  const HTTP_BASE = BACKEND.replace(/^ws/, 'http').replace(/\/ws$/, '');
+  const CELL_NAMES = ['top-left','top-center','top-right','middle-left','center',
+                      'middle-right','bottom-left','bottom-center','bottom-right'];
+
+  let cfg = { fps: 4, jpeg_quality: 0.7, k_stable: 4, t_motion: 6.0,
+              game: 'tic_tac_toe', engine: 'minimax' };
+  let ws = null, wsOpen = false, retryTimer = null, retryLeft = 0;
+  let stream = null, sendTimer = null, speaking = true;
+  let lastState = null, lastFsm = '';
+
+  const $ = id => document.getElementById(id);
+  if (OBSERVER) { document.body.classList.add('observer'); $('rolePill').textContent = 'OBSERVER'; }
+  if (DEV) $('devPanel').classList.add('show');
+
+  // --- board / grid scaffolding ------------------------------------------------
+  const readGrid = $('readGrid'), board = $('board'), devGrid = $('devGrid');
+  for (let i = 0; i < 9; i++) {
+    const rc = document.createElement('div');
+    rc.className = 'rcell'; rc.innerHTML = '<div class="m">—</div><div class="t">ink —</div>';
+    readGrid.appendChild(rc);
+    const bc = document.createElement('div'); bc.className = 'bcell'; board.appendChild(bc);
+    const db = document.createElement('button'); db.textContent = i;
+    db.onclick = () => send({ type: 'control', action: 'simulate_mark', cell: i });
+    devGrid.appendChild(db);
+  }
+  const svgX = '<svg viewBox="0 0 40 40" aria-label="X"><line x1="8" y1="8" x2="32" y2="32" stroke="#E8E6DF" stroke-width="4.5" stroke-linecap="round"/><line x1="32" y1="8" x2="8" y2="32" stroke="#E8E6DF" stroke-width="4.5" stroke-linecap="round"/></svg>';
+  const svgO = '<svg viewBox="0 0 40 40" aria-label="O"><circle cx="20" cy="20" r="12" fill="none" stroke="#E8E6DF" stroke-width="4"/></svg>';
+  const svgGhostO = '<svg viewBox="0 0 40 40" style="opacity:.75" aria-label="Pending O"><circle cx="20" cy="20" r="12" fill="none" stroke="#E8A33D" stroke-width="4" stroke-dasharray="5 5"/></svg>';
+
+  // --- websocket -----------------------------------------------------------------
+  function connect() {
+    clearTimeout(retryTimer);
+    ws = new WebSocket(BACKEND);
+    $('wsText').textContent = 'connecting';
+    ws.onopen = () => {
+      wsOpen = true; $('wsDot').classList.add('on'); $('wsText').textContent = 'ws connected';
+      fetch(HTTP_BASE + '/config').then(r => r.json()).then(c => {
+        cfg = c; $('gameBadge').textContent = c.game; tick(`config fps ${c.fps} engine ${c.engine}`);
+      }).catch(() => {});
+    };
+    ws.onclose = () => {
+      wsOpen = false; $('wsDot').classList.remove('on');
+      retryLeft = 3;
+      const cd = () => {
+        $('wsText').textContent = `retry in ${retryLeft}s`;
+        if (retryLeft-- <= 0) return connect();
+        retryTimer = setTimeout(cd, 1000);
+      };
+      cd();
+    };
+    ws.onmessage = e => {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'state') onState(msg);
+      else if (msg.type === 'debug') $('debugImg').src = 'data:image/jpeg;base64,' + msg.jpeg_b64;
+      else if (msg.type === 'speak') onSpeak(msg.text);
+    };
+  }
+  function send(obj) { if (wsOpen) ws.send(JSON.stringify(obj)); }
+
+  // --- camera ----------------------------------------------------------------------
+  async function initCamera(deviceId) {
+    if (OBSERVER) return;
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: deviceId ? { deviceId: { exact: deviceId } }
+                        : { facingMode: 'environment', width: { ideal: 1280 } }
+      });
+      $('video').srcObject = stream;
+      $('camMeta').textContent = '1280×720 · jpeg ' + cfg.jpeg_quality;
+      const devs = (await navigator.mediaDevices.enumerateDevices())
+        .filter(d => d.kind === 'videoinput');
+      $('camSelect').innerHTML = devs.map(d =>
+        `<option value="${d.deviceId}">${d.label || 'camera'}</option>`).join('');
+      if (deviceId) $('camSelect').value = deviceId;
+      startSending();
+    } catch (err) {
+      $('camMeta').textContent = 'no camera';
+      tick('camera error: ' + err.name, 'err');
+    }
+  }
+  $('camSelect').onchange = e => initCamera(e.target.value);
+
+  const cap = document.createElement('canvas');
+  function startSending() {
+    clearInterval(sendTimer);
+    sendTimer = setInterval(() => {
+      const v = $('video');
+      if (!wsOpen || !v.videoWidth) return;
+      cap.width = 640; cap.height = Math.round(640 * v.videoHeight / v.videoWidth);
+      cap.getContext('2d').drawImage(v, 0, 0, cap.width, cap.height);
+      const b64 = cap.toDataURL('image/jpeg', cfg.jpeg_quality).split(',')[1];
+      send({ type: 'frame', jpeg_b64: b64, ts: Date.now() / 1000 });
+    }, 1000 / (cfg.fps || 4));
+  }
+
+  // --- state rendering ---------------------------------------------------------------
+  const PILL = {
+    IDLE:       ['pill-grey',  () => 'IDLE — press Start'],
+    CALIBRATING:['pill-amber', () => 'CALIBRATING — hold the camera over the page'],
+    HUMAN_TURN: ['pill-teal',  () => 'YOUR TURN — draw your X'],
+    CONFIRMING: ['pill-amber', () => 'CONFIRMING — hold still'],
+    AGENT_TURN: ['pill-teal',  () => 'THINKING'],
+    AWAIT_DRAW: ['pill-amber', s => 'AWAITING INK — draw my O in the ' +
+                                    (s.expected_cell != null ? CELL_NAMES[s.expected_cell] : 'cell')],
+    MISMATCH:   ['pill-coral', () => 'MISMATCH — page differs from expectation'],
+    GAME_OVER:  ['pill-teal',  () => 'GAME OVER'],
+  };
+
+  function onState(s) {
+    lastState = s;
+    const [cls, fn] = PILL[s.fsm] || ['pill-grey', () => s.fsm];
+    $('statePill').className = cls;
+    $('stateLabel').textContent = fn(s);
+    if (s.fsm !== lastFsm) { tick('state ' + s.fsm, 'hot'); lastFsm = s.fsm; }
+
+    const t = s.telemetry || {};
+    $('tFps').textContent = 'fps ' + (t.fps ?? '—');
+    $('tDiff').textContent = `diff ${t.diff ?? '—'} / ${t.t_motion ?? '—'}`;
+    $('tGate').textContent = t.motion ? 'gate closed' : 'gate open';
+    $('tGate').style.color = t.motion ? 'var(--amber)' : 'var(--teal)';
+    $('tLock').textContent = t.grid_found ? `grid lock · ${t.method}` : 'no grid';
+    $('tLock').style.color = t.grid_found ? '' : 'var(--faint)';
+    $('rectMeta').textContent = '330×330' + (t.reproj != null ? ' · reproj ' + t.reproj : '') +
+                                (t.frame_ms ? ' · ' + t.frame_ms + 'ms' : '');
+    $('tStreak').textContent = `streak ${t.streak ?? 0}/${t.k_stable ?? 4}`;
+    $('tArb').textContent = 'arbiter ' + (t.arbiter || 'idle');
+    $('tArb').style.color = t.arbiter === 'pending' ? 'var(--amber)' : '';
+    $('tWatch').textContent =
+      s.fsm === 'AWAIT_DRAW' && s.expected_cell != null ? `watching ${CELL_NAMES[s.expected_cell]}` :
+      s.mismatch ? s.mismatch.detail : '';
+    $('tWatch').style.color = s.mismatch ? 'var(--coral)' : '';
+    $('boardMeta').textContent = `move ${s.move_no}` +
+      (s.fsm === 'MISMATCH' ? ' · frozen' : s.turn === 'agent' ? ' · agent O' : '');
+
+    renderReadGrid(s, t);
+    renderBoard(s);
+    drawOverlay(t);
+
+    const mm = s.fsm === 'MISMATCH';
+    $('voicePanel').classList.toggle('alert', mm);
+    $('voiceTitle').textContent = mm ? 'AGENT · NEEDS AN ANSWER' : 'AGENT';
+    $('mmButtons').classList.toggle('show', mm);
+  }
+
+  function renderReadGrid(s, t) {
+    const cells = t.cells || [];
+    [...readGrid.children].forEach((el, i) => {
+      const c = cells[i];
+      const seenMark = c && c.mark;
+      let cls = 'rcell', m = '—', info = c ? 'ink ' + c.ink.toFixed(2) : 'ink —';
+      if (seenMark) {
+        m = c.mark; info = `conf ${c.conf.toFixed(2)} · ink ${c.ink.toFixed(2)}`;
+        cls += c.conf < 0.75 ? ' low' : ' read';
+      }
+      if (s.fsm === 'AWAIT_DRAW' && i === s.expected_cell && !seenMark) {
+        cls = 'rcell await'; m = 'O ?'; info = 'awaiting ink';
+      }
+      if (s.mismatch && seenMark && s.board[i] !== c.mark) {
+        cls = 'rcell bad'; info = `conf ${c.conf.toFixed(2)} · unexpected`;
+      }
+      if (s.mismatch && i === (s.mismatch.expected_cell ?? -1) && !seenMark) {
+        cls = 'rcell await'; m = 'O ?'; info = 'expected here';
+      }
+      el.className = cls;
+      el.children[0].textContent = m;
+      el.children[1].textContent = info;
+    });
+  }
+
+  function renderBoard(s) {
+    [...board.children].forEach((el, i) => {
+      el.className = 'bcell'; el.innerHTML = '';
+      if (s.board[i] === 'X') el.innerHTML = svgX;
+      else if (s.board[i] === 'O') el.innerHTML = svgO;
+      if (s.fsm === 'AWAIT_DRAW' && i === s.expected_cell) {
+        el.className = 'bcell await'; el.innerHTML = svgGhostO;
+      }
+      if (s.mismatch && s.mismatch.seen && s.mismatch.seen[i] !== s.board[i]) {
+        el.className = 'bcell bad'; el.textContent = '?';
+      }
+      if (s.mismatch && i === (s.mismatch.expected_cell ?? -1)) {
+        el.className = 'bcell await'; el.innerHTML = svgGhostO;
+      }
+    });
+  }
+
+  function drawOverlay(t) {
+    const v = $('video'), ov = $('overlay');
+    if (!v.videoWidth) { ov.width = 0; return; }
+    const box = v.getBoundingClientRect();
+    ov.width = box.width; ov.height = box.height;
+    ov.style.left = v.offsetLeft + 'px'; ov.style.top = v.offsetTop + 'px';
+    const ctx = ov.getContext('2d');
+    ctx.clearRect(0, 0, ov.width, ov.height);
+    if (!t.corners) return;
+    const sc = box.width / 640;                       // server frame is 640 wide
+    ctx.strokeStyle = '#35C9A3'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]);
+    ctx.beginPath();
+    t.corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
+    ctx.closePath(); ctx.stroke();
+  }
+
+  // --- speech / voice panel -------------------------------------------------------
+  function onSpeak(text) {
+    const prev = $('utter').textContent;
+    if (prev && prev !== 'Connecting to the agent…') {
+      const line = document.createElement('div');
+      line.textContent = ts() + ' · ' + prev;
+      $('uhist').prepend(line);
+      while ($('uhist').children.length > 6) $('uhist').lastChild.remove();
+    }
+    $('utter').textContent = text;
+    tick('speak "' + text.slice(0, 48) + (text.length > 48 ? '…"' : '"'));
+    if (speaking && 'speechSynthesis' in window) {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 1.05;
+      speechSynthesis.speak(u);
+    }
+  }
+
+  // --- ticker -----------------------------------------------------------------------
+  function ts() { return new Date().toTimeString().slice(0, 8); }
+  function tick(text, cls) {
+    const d = document.createElement('div');
+    if (cls) d.className = cls;
+    d.textContent = ts() + ' ' + text;
+    const f = $('ticker');
+    f.prepend(d);
+    while (f.children.length > 5) f.lastChild.remove();
+  }
+
+  // --- controls ----------------------------------------------------------------------
+  $('btnStart').onclick = () => { send({ type: 'control', action: 'start' });
+                                  if (speaking) speechSynthesis?.cancel(); };
+  $('btnReset').onclick = () => send({ type: 'control', action: 'reset' });
+  $('btnAccept').onclick = () => send({ type: 'control', action: 'accept_reading' });
+  $('btnFix').onclick = () => send({ type: 'control', action: 'fix_page' });
+  $('viewToggle').onclick = () => {
+    const showComposite = $('debugImg').style.display !== 'block';
+    $('debugImg').style.display = showComposite ? 'block' : 'none';
+    $('readGrid').style.display = showComposite ? 'none' : 'grid';
+    $('viewToggle').textContent = showComposite ? 'cells' : 'composite';
+  };
+  $('voiceMeta').onclick = () => {
+    speaking = !speaking;
+    $('voiceMeta').textContent = speaking ? 'voice on' : 'voice off';
+    if (!speaking) speechSynthesis?.cancel();
+  };
+
+  connect();
+  initCamera();
+  tick('client ready — backend ' + BACKEND);
+})();
+</script>
+</body>
+</html>

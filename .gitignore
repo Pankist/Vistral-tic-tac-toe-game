@@ -1,0 +1,27 @@
+# secrets & local env
+.env
+
+# runtime data — code is git, learned state is data
+runs/
+boards.pdf
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# os / editor
+.DS_Store
+
+# local working documents, not part of the deliverable repo (root only —
+# the copies under docs/diagrams/ ARE tracked)
+/SPEC.md
+/DESIGN.md
+/VP R&D - Home Assignment.pdf
+/state-await-draw.html
+/state-mismatch.html
+/decision_and_delivery_flow.png
+/frame_flow_decision_stage.png
+/frame_flow_perception_stage.png
+/vistral_demo_topology.png
