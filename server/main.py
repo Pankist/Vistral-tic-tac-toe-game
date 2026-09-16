@@ -245,6 +245,8 @@ class SessionRunner:
             "confidence": s.last_conf, "message": self.message,
             "expected_cell": s.expected_cell,
             "mismatch": s.mismatch, "move_no": x + o,
+            "win_line": (self.game.win_line(s.board)
+                         if s.state == "GAME_OVER" else None),
             "telemetry": {
                 "fps": round(len(self._frame_times) / 5.0, 1),
                 "diff": p.diff if p else 0.0, "t_motion": cfg.T_MOTION,
