@@ -19,7 +19,8 @@ test:
 print-board:
 	$(BIN)/python scripts/make_board.py
 
+CLIENT_PORT ?= 3000
 client:
-	cd client && $(PY) -m http.server 3000
+	cd client && $(PY) -m http.server $(CLIENT_PORT)
 
 .PHONY: setup dev run test print-board client
