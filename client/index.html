@@ -50,6 +50,7 @@
   .role { font-family:'IBM Plex Mono',monospace; font-size:11px; color:#0C1210;
           background:var(--teal); border-radius:999px; padding:4px 10px; font-weight:500; }
   #btnStart { padding:0 20px; background:var(--teal); color:#0C1210; border:none; font-weight:600; }
+  #btnStart:disabled { opacity:.35; cursor:default; }
   #btnReset { padding:0 18px; background:transparent; color:var(--text); border:1px solid var(--line2); }
 
   /* main */
@@ -398,6 +399,12 @@
     $('voicePanel').classList.toggle('alert', mm);
     $('voiceTitle').textContent = mm ? 'AGENT · NEEDS AN ANSWER' : 'AGENT';
     $('mmButtons').classList.toggle('show', mm);
+    // Start only means something before a game or after one
+    $('btnStart').disabled = !(s.fsm === 'IDLE' || s.fsm === 'GAME_OVER');
+    // the server's message is the agent's current line even when nothing has
+    // been spoken yet (e.g. "Press Start…") — the panel must never sit on a
+    // stale placeholder
+    if (s.message) updateUtter(s.message);
   }
 
   function renderReadGrid(s, cells) {
@@ -480,8 +487,9 @@
   }
 
   // --- speech / voice panel -------------------------------------------------------
-  function onSpeak(text) {
+  function updateUtter(text) {
     const prev = $('utter').textContent;
+    if (text === prev) return;
     if (prev && prev !== 'Connecting to the agent…') {
       const line = document.createElement('div');
       line.textContent = ts() + ' · ' + prev;
@@ -489,6 +497,10 @@
       while ($('uhist').children.length > 6) $('uhist').lastChild.remove();
     }
     $('utter').textContent = text;
+  }
+
+  function onSpeak(text) {
+    updateUtter(text);
     tick('speak "' + text.slice(0, 48) + (text.length > 48 ? '…"' : '"'));
     if (speaking) speakText(text);
   }
