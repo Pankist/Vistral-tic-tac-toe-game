@@ -208,10 +208,17 @@ def _try_seed(gray, segs, lengths, angles, theta0, short, canonical):
                          (segs[idx, 1] + segs[idx, 3]) / 2], axis=1)
         offsets = mids @ normal
         clusters = _cluster_offsets(offsets, lengths[idx], gap=short * GAP_FRAC)
-        # fit every cluster and keep only real ink strokes (kills paper edges)
+        # fit every cluster; keep only real ink strokes (kills paper edges)
+        # that are LONG (kills chords through bold O/X marks — a grid line
+        # spans ~3 cells, a mark-derived chord spans at most one)
+        direction = np.array([np.cos(fam_theta), np.sin(fam_theta)])
         fitted = []
         for center, weight, members in clusters:
             gidx = list(idx[members])
+            pts = np.vstack([segs[gidx][:, :2], segs[gidx][:, 2:]])
+            span = float((pts @ direction).max() - (pts @ direction).min())
+            if span < 0.30 * short:
+                continue
             line = _fit_family_line(segs, gidx)
             if _is_ink_stroke(gray, line, segs, gidx):
                 fitted.append((center, weight, gidx, line))

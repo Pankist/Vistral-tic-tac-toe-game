@@ -106,6 +106,35 @@ def test_faint_thin_strokes_on_tilted_paper_with_textured_desk():
     assert cells[4].mark == "X"
 
 
+def test_bold_marks_do_not_hijack_the_lock():
+    """Regression: a busy board with fat marker O's and X's. Hough chords
+    through bold circular strokes form line clusters at mark-row offsets and
+    can out-vote a true grid line by ink weight; the span filter (grid lines
+    are long, mark chords are short) must keep the lock on the grid."""
+    img = np.full((480, 640), 208, np.uint8)
+    cx, cy, third = 300, 240, 90
+    for k in (0, 1):
+        p = -third // 2 + k * third
+        cv2.line(img, (cx + p, cy - 140), (cx + p, cy + 140), 40, 6, cv2.LINE_AA)
+        cv2.line(img, (cx - 140, cy + p), (cx + 140, cy + p), 40, 6, cv2.LINE_AA)
+    layout = {0: "O", 1: "X", 2: "X", 4: "X", 6: "O", 7: "O"}   # the real page
+    for cell, mark in layout.items():
+        r, c = divmod(cell, 3)
+        mx, my = cx + (c - 1) * third, cy + (r - 1) * third
+        if mark == "O":
+            cv2.circle(img, (mx, my), int(third * 0.30), 30, 6, cv2.LINE_AA)
+        else:
+            m = int(third * 0.26)
+            cv2.line(img, (mx - m, my - m), (mx + m, my + m), 30, 6, cv2.LINE_AA)
+            cv2.line(img, (mx + m, my - m), (mx - m, my + m), 30, 6, cv2.LINE_AA)
+
+    fit = rectify_grid.find_grid(img)
+    assert fit is not None, "no lock on a busy board"
+    cells = read_cells(rectify_grid.warp(img, fit))
+    got = {i: c.mark for i, c in enumerate(cells) if c.mark}
+    assert got == layout, f"lock drifted: read {got}"
+
+
 def test_quad_sanity_rejects_slivers():
     """A page mid-motion can yield near-collinear intersections — a sliver
     quad must never become a homography."""
