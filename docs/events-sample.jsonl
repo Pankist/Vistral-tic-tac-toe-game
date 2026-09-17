@@ -1,0 +1,876 @@
+{"ts": 1789596288.228, "type": "session_start", "git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}
+{"ts": 1789596288.394, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789596288.395, "type": "control", "action": "start"}
+{"ts": 1789596288.395, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 99%. You're X, you start. Go ahead."}
+{"ts": 1789596288.395, "type": "board_lock", "conf": 0.99, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789596288.395, "type": "confirm", "cell": 0, "mark": "X", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.395, "type": "speak", "point": "react", "text": "I saw that X land in the top-left."}
+{"ts": 1789596288.403, "type": "engine_move", "engine": "minimax", "move": 4, "ms": 7.9, "reasoning": "", "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.403, "type": "speak", "point": "own_move", "text": "I'll take the center. Draw an O there for me."}
+{"ts": 1789596288.403, "type": "agent_move_announced", "cell": 4}
+{"ts": 1789596288.566, "type": "confirm", "cell": 4, "mark": "O", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.567, "type": "speak", "point": "verified", "text": "Ink matches the call. Your move."}
+{"ts": 1789596288.73, "type": "confirm", "cell": 1, "mark": "X", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.73, "type": "speak", "point": "react", "text": "X in the top-center. Noted."}
+{"ts": 1789596288.731, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 0.25, "reasoning": "", "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.731, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789596288.731, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789596288.894, "type": "confirm", "cell": 2, "mark": "O", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596288.894, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789596289.054, "type": "confirm", "cell": 3, "mark": "X", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596289.054, "type": "speak", "point": "react", "text": "Middle-left \u2014 noted."}
+{"ts": 1789596289.055, "type": "engine_move", "engine": "minimax", "move": 6, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596289.055, "type": "speak", "point": "own_move", "text": "I play the bottom-left. Put an O there and take your hand out of frame."}
+{"ts": 1789596289.055, "type": "agent_move_announced", "cell": 6}
+{"ts": 1789596289.218, "type": "confirm", "cell": 6, "mark": "O", "conf": 0.99, "provenance": {"git_sha": "5ba4e53", "config_hash": "be6b3ae3c40a", "memory_version": 1}}
+{"ts": 1789596289.218, "type": "speak", "point": "verified", "text": "Ink matches the call. Your move."}
+{"ts": 1789596289.218, "type": "game_result", "result": "agent", "moves": 6, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 1, "misreads": 0, "arbiter_calls": 0, "t_empty": null}}
+{"ts": 1789596289.218, "type": "speak", "point": "game_over", "text": "I win. Good game. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 1 on record."}
+{"ts": 1789596289.385, "type": "session_end", "fsm": "GAME_OVER"}
+{"ts": 1789596659.695, "type": "session_start", "git_sha": "5d52eea", "config_hash": "be6b3ae3c40a", "memory_version": 2}
+{"ts": 1789596834.324, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789596834.324, "type": "control", "action": "start"}
+{"ts": 1789596835.533, "type": "speak", "point": "lock", "text": "Board locked at 83%. You're X \u2014 your move."}
+{"ts": 1789596835.533, "type": "board_lock", "conf": 0.83, "board": ["X", "X", "", "X", "X", "X", "", "X", "X"]}
+{"ts": 1789596838.796, "type": "confirm", "cell": 2, "mark": "X", "conf": 0.9, "provenance": {"git_sha": "5d52eea", "config_hash": "be6b3ae3c40a", "memory_version": 2}}
+{"ts": 1789596838.796, "type": "speak", "point": "react", "text": "Top-right taken. Bold."}
+{"ts": 1789596838.796, "type": "game_result", "result": "human", "moves": 1, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 2, "misreads": 0, "arbiter_calls": 0, "t_empty": null}}
+{"ts": 1789596838.796, "type": "speak", "point": "game_over", "text": "That's the game \u2014 you win. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 2 on record."}
+{"ts": 1789596865.0, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789596865.0, "type": "control", "action": "start"}
+{"ts": 1789596866.788, "type": "speak", "point": "lock", "text": "Board locked at 87%. You're X \u2014 your move."}
+{"ts": 1789596866.789, "type": "board_lock", "conf": 0.87, "board": ["X", "X", "X", "X", "X", "X", "", "X", "X"]}
+{"ts": 1789596874.881, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789596874.881, "type": "control", "action": "reset"}
+{"ts": 1789596876.61, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789596876.61, "type": "control", "action": "reset"}
+{"ts": 1789596878.71, "type": "session_end", "fsm": "CALIBRATING"}
+{"ts": 1789596878.94, "type": "session_start", "git_sha": "5d52eea", "config_hash": "be6b3ae3c40a", "memory_version": 3}
+{"ts": 1789596962.975, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789596962.976, "type": "control", "action": "start"}
+{"ts": 1789596968.375, "type": "speak", "point": "lock", "text": "Board locked at 88%. You're X \u2014 your move."}
+{"ts": 1789596968.375, "type": "board_lock", "conf": 0.88, "board": ["X", "X", "X", "X", "X", "X", "", "X", "X"]}
+{"ts": 1789596982.527, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789596982.527, "type": "control", "action": "start"}
+{"ts": 1789596993.117, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 85%. You're X, you start. Go ahead."}
+{"ts": 1789596993.117, "type": "board_lock", "conf": 0.85, "board": ["X", "X", "", "X", "X", "X", "", "X", "X"]}
+{"ts": 1789597001.412, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789597001.412, "type": "control", "action": "start"}
+{"ts": 1789597006.126, "type": "speak", "point": "lock", "text": "Got the grid, confidence 90%. Draw your X when ready."}
+{"ts": 1789597006.126, "type": "board_lock", "conf": 0.9, "board": ["X", "X", "X", "X", "X", "X", "", "X", "X"]}
+{"ts": 1789597094.215, "type": "session_end", "fsm": "CONFIRMING"}
+{"ts": 1789597094.494, "type": "session_start", "git_sha": "5d52eea", "config_hash": "be6b3ae3c40a", "memory_version": 3}
+{"ts": 1789597143.287, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789597146.613, "type": "session_start", "git_sha": "06a66d9", "config_hash": "2799e43fc818", "memory_version": 3}
+{"ts": 1789597176.159, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789597176.363, "type": "session_start", "git_sha": "06a66d9", "config_hash": "2799e43fc818", "memory_version": 3}
+{"ts": 1789597237.831, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789597237.831, "type": "control", "action": "start"}
+{"ts": 1789597246.075, "type": "speak", "point": "lock", "text": "Got the grid, confidence 91%. Draw your X when ready."}
+{"ts": 1789597246.075, "type": "board_lock", "conf": 0.91, "board": ["X", "X", "X", "X", "", "", "", "", ""]}
+{"ts": 1789597266.971, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789597266.971, "type": "control", "action": "start"}
+{"ts": 1789597314.574, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 89%. You're X, you start. Go ahead."}
+{"ts": 1789597314.574, "type": "board_lock", "conf": 0.89, "board": ["X", "X", "X", "X", "", "", "", "", ""]}
+{"ts": 1789597559.063, "type": "speak", "point": "illegal", "text": "Hold on: 6 cells changed at once. Fix it, or tell me to take the camera reading as truth."}
+{"ts": 1789597559.064, "type": "mismatch", "detail": "6 cells changed at once", "changed": [[0, "X", ""], [1, "X", ""], [2, "X", ""], [3, "X", ""], [5, "", "X"], [8, "", "X"]]}
+{"ts": 1789597604.169, "type": "session_end", "fsm": "MISMATCH"}
+{"ts": 1789597607.628, "type": "session_start", "git_sha": "6869d06", "config_hash": "2799e43fc818", "memory_version": 3}
+{"ts": 1789597629.586, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789597629.769, "type": "session_start", "git_sha": "6869d06", "config_hash": "2799e43fc818", "memory_version": 3}
+{"ts": 1789597648.7, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789597648.86, "type": "session_start", "git_sha": "6869d06", "config_hash": "2799e43fc818", "memory_version": 3}
+{"ts": 1789597700.544, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789597700.545, "type": "control", "action": "start"}
+{"ts": 1789597701.697, "type": "speak", "point": "lock", "text": "Got the grid, confidence 77%. Draw your X when ready."}
+{"ts": 1789597701.697, "type": "board_lock", "conf": 0.77, "board": ["", "", "X", "X", "", "", "X", "X", "X"]}
+{"ts": 1789597785.919, "type": "speak", "point": "illegal", "text": "Hold on: 5 cells changed at once. Fix it, or tell me to take the camera reading as truth."}
+{"ts": 1789597785.919, "type": "mismatch", "detail": "5 cells changed at once", "changed": [[2, "X", ""], [3, "X", ""], [6, "X", ""], [7, "X", ""], [8, "X", ""]]}
+{"ts": 1789597787.692, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789597789.422, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789597790.672, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789597790.752, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789597790.753, "type": "control", "action": "start"}
+{"ts": 1789597798.422, "type": "speak", "point": "lock", "text": "Board locked at 100%. You're X \u2014 your move."}
+{"ts": 1789597798.423, "type": "board_lock", "conf": 1.0, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789597807.673, "type": "confirm", "cell": 5, "mark": "X", "conf": 0.93, "provenance": {"git_sha": "6869d06", "config_hash": "2799e43fc818", "memory_version": 3}}
+{"ts": 1789597807.674, "type": "speak", "point": "react", "text": "I saw that X land in the middle-right."}
+{"ts": 1789597807.681, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 7.55, "reasoning": "", "provenance": {"git_sha": "6869d06", "config_hash": "2799e43fc818", "memory_version": 3}}
+{"ts": 1789597807.681, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789597807.682, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789597822.676, "type": "speak", "point": "mismatch", "text": "The page shows X in top-right; I expected top-right. Fix it, or tell me to accept the reading."}
+{"ts": 1789597822.676, "type": "mismatch", "expected": 2, "changed": [[2, "", "X"]]}
+{"ts": 1789597824.167, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597827.169, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597829.006, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597830.928, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597832.673, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597833.93, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597835.686, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597837.168, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597839.173, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597840.175, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597841.167, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597842.434, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597844.427, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597845.939, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597847.424, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597849.426, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597850.68, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597853.669, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597855.181, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597857.177, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597858.179, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597860.671, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597861.951, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597863.871, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597865.173, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597866.17, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597867.668, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597870.681, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597872.416, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597873.676, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597874.924, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597876.424, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597877.419, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597879.67, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597881.42, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597882.42, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597884.681, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597886.424, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597887.919, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597889.937, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597891.679, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597892.921, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597894.167, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597895.173, "type": "mismatch_update", "seen": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789597897.209, "type": "speak", "point": "accepted", "text": "Fine, we play it as it lies."}
+{"ts": 1789597897.209, "type": "mismatch_resolved", "via": "accept_reading"}
+{"ts": 1789597906.218, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789597906.218, "type": "control", "action": "start"}
+{"ts": 1789597915.421, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 98%. You're X, you start. Go ahead."}
+{"ts": 1789597915.422, "type": "board_lock", "conf": 0.98, "board": ["", "", "X", "", "", "X", "", "", ""]}
+{"ts": 1789598138.286, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789598141.775, "type": "session_start", "git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789598185.991, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789598186.332, "type": "session_start", "git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789598196.176, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789598196.177, "type": "control", "action": "start"}
+{"ts": 1789598222.915, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789598222.916, "type": "control", "action": "start"}
+{"ts": 1789598241.917, "type": "speak", "point": "lock", "text": "Board locked at 95%. You're X \u2014 your move."}
+{"ts": 1789598241.917, "type": "board_lock", "conf": 0.95, "board": ["", "", "O", "", "", "X", "", "", ""]}
+{"ts": 1789598258.169, "type": "confirm", "cell": 4, "mark": "X", "conf": 0.92, "provenance": {"git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598258.169, "type": "speak", "point": "react", "text": "Center \u2014 noted."}
+{"ts": 1789598258.17, "type": "engine_move", "engine": "minimax", "move": 3, "ms": 0.8, "reasoning": "", "provenance": {"git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598258.17, "type": "speak", "point": "own_move", "text": "I play the middle-left. Put an O there and take your hand out of frame."}
+{"ts": 1789598258.17, "type": "agent_move_announced", "cell": 3}
+{"ts": 1789598275.919, "type": "speak", "point": "arbiter_look", "text": "Not sure about the middle-left \u2014 looking closer."}
+{"ts": 1789598275.919, "type": "arbiter_invoked", "changed": [[3, "", "O"]], "conf": 0.65}
+{"ts": 1789598276.098, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789598276.098, "type": "speak", "point": "arbiter_fail", "text": "Still ambiguous after a closer look. Redraw it thicker, or tell me to accept the reading."}
+{"ts": 1789598276.098, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789598278.409, "type": "mismatch_update", "seen": ["", "", "O", "O", "X", "X", "", "", ""]}
+{"ts": 1789598280.164, "type": "mismatch_update", "seen": ["", "", "O", "O", "X", "X", "", "", ""]}
+{"ts": 1789598281.717, "type": "mismatch_update", "seen": ["", "", "O", "O", "X", "X", "", "", ""]}
+{"ts": 1789598283.917, "type": "mismatch_update", "seen": ["", "", "O", "O", "X", "X", "", "", ""]}
+{"ts": 1789598286.255, "type": "speak", "point": "accepted", "text": "Fine, we play it as it lies."}
+{"ts": 1789598286.255, "type": "mismatch_resolved", "via": "accept_reading"}
+{"ts": 1789598377.809, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598377.809, "type": "control", "action": "start"}
+{"ts": 1789598402.199, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 90%. You're X, you start. Go ahead."}
+{"ts": 1789598402.199, "type": "board_lock", "conf": 0.9, "board": ["", "", "O", "O", "X", "X", "", "", ""]}
+{"ts": 1789598420.444, "type": "confirm", "cell": 8, "mark": "X", "conf": 0.93, "provenance": {"git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598420.444, "type": "speak", "point": "react", "text": "Bottom-right \u2014 noted."}
+{"ts": 1789598420.444, "type": "engine_move", "engine": "minimax", "move": 0, "ms": 0.22, "reasoning": "", "provenance": {"git_sha": "24031d6", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598420.444, "type": "speak", "point": "own_move", "text": "I'll take the top-left. Draw an O there for me."}
+{"ts": 1789598420.445, "type": "agent_move_announced", "cell": 0}
+{"ts": 1789598439.415, "type": "speak", "point": "arbiter_look", "text": "Not sure about the top-left \u2014 looking closer."}
+{"ts": 1789598439.416, "type": "arbiter_invoked", "changed": [[0, "", "O"]], "conf": 0.65}
+{"ts": 1789598439.567, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789598439.567, "type": "speak", "point": "arbiter_fail", "text": "I can't resolve that mark on my own. Fix the page, or tell me to accept my best guess."}
+{"ts": 1789598439.567, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789598439.917, "type": "speak", "point": "fixed", "text": "That matches now. Go on."}
+{"ts": 1789598439.917, "type": "mismatch_resolved", "via": "page_fixed"}
+{"ts": 1789598445.183, "type": "speak", "point": "arbiter_look", "text": "Low confidence on the top-left. Checking properly."}
+{"ts": 1789598445.184, "type": "arbiter_invoked", "changed": [[0, "", "O"]], "conf": 0.65}
+{"ts": 1789598445.355, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789598445.355, "type": "speak", "point": "arbiter_fail", "text": "I can't resolve that mark on my own. Fix the page, or tell me to accept my best guess."}
+{"ts": 1789598445.356, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789598445.412, "type": "speak", "point": "fixed", "text": "Page fixed \u2014 back to it."}
+{"ts": 1789598445.412, "type": "mismatch_resolved", "via": "page_fixed"}
+{"ts": 1789598462.921, "type": "speak", "point": "arbiter_look", "text": "Low confidence on the top-left. Checking properly."}
+{"ts": 1789598462.921, "type": "arbiter_invoked", "changed": [[0, "", "O"], [1, "", "X"]], "conf": 0.65}
+{"ts": 1789598463.062, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789598463.062, "type": "speak", "point": "arbiter_fail", "text": "I can't resolve that mark on my own. Fix the page, or tell me to accept my best guess."}
+{"ts": 1789598463.062, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789598467.416, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598470.431, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598475.413, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598477.421, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598480.437, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598499.418, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598504.932, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598507.42, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598530.425, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598531.921, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598535.423, "type": "mismatch_update", "seen": ["", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598538.161, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598555.674, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598559.447, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598583.922, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598587.928, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598592.419, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598593.916, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598600.671, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598605.67, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598607.684, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598616.671, "type": "mismatch_update", "seen": ["", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598619.916, "type": "mismatch_update", "seen": ["O", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598638.675, "type": "session_end", "fsm": "MISMATCH"}
+{"ts": 1789598642.147, "type": "session_start", "git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789598661.348, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789598661.538, "type": "session_start", "git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789598688.301, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789598688.301, "type": "control", "action": "reset"}
+{"ts": 1789598695.175, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598695.175, "type": "control", "action": "start"}
+{"ts": 1789598727.038, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 4 X, 2 O. My move \u2014 one second."}
+{"ts": 1789598727.039, "type": "engine_move", "engine": "minimax", "move": 0, "ms": 0.24, "reasoning": "", "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598727.039, "type": "speak", "point": "own_move", "text": "I'll take the top-left. Draw an O there for me."}
+{"ts": 1789598727.039, "type": "agent_move_announced", "cell": 0}
+{"ts": 1789598727.039, "type": "board_lock", "conf": 0.83, "board": ["", "X", "O", "O", "X", "X", "", "", "X"]}
+{"ts": 1789598740.464, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598740.464, "type": "control", "action": "start"}
+{"ts": 1789598784.314, "type": "speak", "point": "lock_resume", "text": "Board locked at 99%, mid-game: 1 X, 0 O on the page. My move \u2014 one second."}
+{"ts": 1789598784.321, "type": "engine_move", "engine": "minimax", "move": 4, "ms": 7.12, "reasoning": "", "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598784.321, "type": "speak", "point": "own_move", "text": "I'll take the center. Draw an O there for me."}
+{"ts": 1789598784.321, "type": "agent_move_announced", "cell": 4}
+{"ts": 1789598784.322, "type": "board_lock", "conf": 0.99, "board": ["", "", "X", "", "", "", "", "", ""]}
+{"ts": 1789598785.797, "type": "speak", "point": "mismatch", "text": "I asked for center but I'm seeing an erased mark in top-right. Did I misread, or are we improvising? Fix the page or tell me to accept it."}
+{"ts": 1789598785.797, "type": "mismatch", "expected": 4, "changed": [[2, "X", ""]]}
+{"ts": 1789598786.779, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789598787.786, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789598788.78, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789598789.784, "type": "mismatch_update", "seen": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789598790.037, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598790.037, "type": "control", "action": "start"}
+{"ts": 1789598791.278, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 100%. You're X, you start. Go ahead."}
+{"ts": 1789598791.278, "type": "board_lock", "conf": 1.0, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789598811.288, "type": "confirm", "cell": 8, "mark": "X", "conf": 0.87, "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598811.288, "type": "speak", "point": "react", "text": "I saw that X land in the bottom-right."}
+{"ts": 1789598811.293, "type": "engine_move", "engine": "minimax", "move": 4, "ms": 4.86, "reasoning": "", "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598811.293, "type": "speak", "point": "own_move", "text": "My move: center. Please draw my O in that cell."}
+{"ts": 1789598811.293, "type": "agent_move_announced", "cell": 4}
+{"ts": 1789598819.788, "type": "speak", "point": "mismatch", "text": "The page shows O in center; I expected center. Fix it, or tell me to accept the reading."}
+{"ts": 1789598819.789, "type": "mismatch", "expected": 4, "changed": [[4, "", "O"], [5, "", "X"]]}
+{"ts": 1789598820.784, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598821.81, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598822.795, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598823.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598824.788, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598825.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598826.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598827.796, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598828.814, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598829.777, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598830.781, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598831.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598832.788, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598833.792, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598834.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598835.789, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598836.795, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598837.789, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598838.79, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598839.795, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598840.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598841.79, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598842.779, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598843.779, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598844.789, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598845.79, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598846.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598847.785, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598848.804, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598849.781, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598850.794, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598851.787, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598852.79, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598853.78, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598854.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598855.791, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598856.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598857.79, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598858.785, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598859.791, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598860.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598861.794, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598862.78, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598863.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598864.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598865.78, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598866.814, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598867.793, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598868.797, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598869.78, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598870.792, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598871.785, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598872.796, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598873.798, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598874.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598875.782, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598876.8, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598877.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598878.787, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598879.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598880.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598881.806, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598882.792, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598883.785, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598884.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598885.796, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598886.792, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598887.777, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598888.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598889.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598890.784, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598891.784, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598892.785, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598893.783, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598894.786, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598895.778, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598896.784, "type": "mismatch_update", "seen": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598897.556, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598897.556, "type": "control", "action": "start"}
+{"ts": 1789598898.8, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789598898.8, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598898.8, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789598898.8, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789598898.8, "type": "board_lock", "conf": 0.95, "board": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789598906.802, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789598907.028, "type": "session_start", "git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789598923.653, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789598923.653, "type": "control", "action": "start"}
+{"ts": 1789598924.725, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789598924.725, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "9490095", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789598924.725, "type": "speak", "point": "own_move", "text": "I play the top-right. Put an O there and take your hand out of frame."}
+{"ts": 1789598924.725, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789598924.725, "type": "board_lock", "conf": 0.95, "board": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789599001.007, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789599004.452, "type": "session_start", "git_sha": "3dd503b", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789599044.097, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789599044.275, "type": "session_start", "git_sha": "3dd503b", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789599052.528, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789599052.529, "type": "control", "action": "start"}
+{"ts": 1789599053.772, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 2 X and 1 O already played, confidence 95%. Resuming. My move \u2014 one second."}
+{"ts": 1789599053.773, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 0.77, "reasoning": "", "provenance": {"git_sha": "3dd503b", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599053.774, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789599053.774, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789599053.774, "type": "board_lock", "conf": 0.95, "board": ["", "", "", "", "O", "X", "", "", "X"]}
+{"ts": 1789599064.786, "type": "speak", "point": "mismatch", "text": "That's not what I called \u2014 X in top-right, not top-right. Your call: fix the page or I accept it."}
+{"ts": 1789599064.786, "type": "mismatch", "expected": 2, "changed": [[2, "", "X"]]}
+{"ts": 1789599065.785, "type": "mismatch_update", "seen": ["", "", "X", "", "O", "X", "", "", "X"]}
+{"ts": 1789599067.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599068.768, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599069.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599070.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599071.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599072.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599073.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599074.779, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599075.768, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599076.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599077.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599078.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599079.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599080.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599081.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599082.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599083.779, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599084.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599085.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599086.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599087.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599088.77, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599089.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599090.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599091.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599092.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599093.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599094.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599095.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599096.77, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599097.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599098.77, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599099.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599100.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599101.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599102.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599103.779, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599104.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599105.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599106.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599107.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599108.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599109.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599110.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599111.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599112.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599113.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599114.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599115.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599116.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599117.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599118.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599119.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599120.78, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599121.782, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599122.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599123.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599124.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599125.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599126.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599127.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599128.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599129.78, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599130.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599131.77, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599132.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599133.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599134.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599135.77, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599136.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599137.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599138.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599139.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599140.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599141.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599142.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599143.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599144.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599145.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599146.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599147.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599148.769, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599149.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599150.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599151.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599152.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599153.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599154.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599155.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599156.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599157.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599158.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599159.778, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599160.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599161.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599162.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599163.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599164.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599165.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599166.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599167.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599168.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599169.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599170.78, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599171.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599172.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599173.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599174.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599175.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599176.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599177.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599178.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599179.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599180.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599181.8, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599182.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599183.768, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599184.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599185.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599186.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599187.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599188.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599189.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599190.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599191.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599192.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599193.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599194.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599195.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599196.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599197.777, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599198.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599199.779, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599200.771, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599201.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599202.776, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599203.768, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599204.772, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599205.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599206.78, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599207.774, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599208.773, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599209.775, "type": "mismatch_update", "seen": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599210.388, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789599210.388, "type": "control", "action": "start"}
+{"ts": 1789599211.521, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 2 O. Your move."}
+{"ts": 1789599211.521, "type": "board_lock", "conf": 0.94, "board": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599294.298, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789599297.694, "type": "session_start", "git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789599331.779, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789599331.923, "type": "session_start", "git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}
+{"ts": 1789599347.688, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789599347.688, "type": "control", "action": "start"}
+{"ts": 1789599348.941, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 2 O. Your move."}
+{"ts": 1789599348.941, "type": "board_lock", "conf": 0.94, "board": ["", "", "O", "", "O", "X", "", "", "X"]}
+{"ts": 1789599364.191, "type": "confirm", "cell": 6, "mark": "X", "conf": 0.83, "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599364.191, "type": "speak", "point": "react", "text": "X in the bottom-left. Noted."}
+{"ts": 1789599364.192, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.39, "reasoning": "", "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599364.192, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789599364.192, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789599375.19, "type": "confirm", "cell": 7, "mark": "O", "conf": 0.9, "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599375.191, "type": "speak", "point": "verified", "text": "Ink matches the call. Your move."}
+{"ts": 1789599390.44, "type": "confirm", "cell": 3, "mark": "X", "conf": 0.88, "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599390.44, "type": "speak", "point": "react", "text": "I saw that X land in the middle-left."}
+{"ts": 1789599390.44, "type": "engine_move", "engine": "minimax", "move": 1, "ms": 0.19, "reasoning": "", "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599390.44, "type": "speak", "point": "own_move", "text": "My move: top-center. Please draw my O in that cell."}
+{"ts": 1789599390.44, "type": "agent_move_announced", "cell": 1}
+{"ts": 1789599399.939, "type": "confirm", "cell": 1, "mark": "O", "conf": 0.9, "provenance": {"git_sha": "47d76f4", "config_hash": "e85172aaf610", "memory_version": 3}}
+{"ts": 1789599399.939, "type": "speak", "point": "verified", "text": "That's my O, confirmed. You're up."}
+{"ts": 1789599399.94, "type": "game_result", "result": "agent", "moves": 8, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 3, "misreads": 0, "arbiter_calls": 0, "t_empty": 0.01}}
+{"ts": 1789599399.94, "type": "speak", "point": "game_over", "text": "I win. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 3 on record."}
+{"ts": 1789599535.567, "type": "session_end", "fsm": "GAME_OVER"}
+{"ts": 1789599539.017, "type": "session_start", "git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 4}
+{"ts": 1789599556.544, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789599556.716, "type": "session_start", "git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 4}
+{"ts": 1789599566.213, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789599566.213, "type": "control", "action": "start"}
+{"ts": 1789599567.465, "type": "board_lock", "conf": 0.91, "board": ["", "O", "O", "X", "O", "X", "X", "O", "X"]}
+{"ts": 1789599567.465, "type": "game_result", "result": "agent", "moves": 8, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 4, "misreads": 0, "arbiter_calls": 0, "t_empty": 0.01}}
+{"ts": 1789599567.465, "type": "speak", "point": "game_over", "text": "I win. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 4 on record."}
+{"ts": 1789599776.505, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789599776.505, "type": "control", "action": "start"}
+{"ts": 1789599788.76, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789599788.76, "type": "control", "action": "reset"}
+{"ts": 1789599790.24, "type": "speak", "point": "lock", "text": "Got the grid, confidence 100%. Draw your X when ready."}
+{"ts": 1789599790.24, "type": "board_lock", "conf": 1.0, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789599790.589, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789599790.59, "type": "control", "action": "reset"}
+{"ts": 1789599829.376, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789599829.376, "type": "control", "action": "start"}
+{"ts": 1789599896.103, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789599896.103, "type": "control", "action": "reset"}
+{"ts": 1789599898.995, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 100%. You're X, you start. Go ahead."}
+{"ts": 1789599898.995, "type": "board_lock", "conf": 1.0, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789599903.244, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789599903.244, "type": "control", "action": "start"}
+{"ts": 1789599905.738, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 100%. You're X, you start. Go ahead."}
+{"ts": 1789599905.739, "type": "board_lock", "conf": 1.0, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789599927.042, "type": "speak", "point": "illegal", "text": "That doesn't parse as a legal move \u2014 2 cells changed at once. Fix the page or tell me to accept what I see."}
+{"ts": 1789599927.042, "type": "mismatch", "detail": "2 cells changed at once", "changed": [[5, "", "X"], [8, "", "X"]]}
+{"ts": 1789599937.529, "type": "confirm", "cell": 5, "mark": "X", "conf": 0.87, "provenance": {"git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789599937.529, "type": "speak", "point": "react", "text": "Middle-right \u2014 noted."}
+{"ts": 1789599937.536, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 7.42, "reasoning": "", "provenance": {"git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789599937.537, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789599937.537, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789599948.767, "type": "confirm", "cell": 2, "mark": "O", "conf": 0.91, "provenance": {"git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789599948.767, "type": "speak", "point": "verified", "text": "Ink matches the call. Your move."}
+{"ts": 1789600087.96, "type": "confirm", "cell": 4, "mark": "X", "conf": 0.85, "provenance": {"git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789600087.96, "type": "speak", "point": "react", "text": "Center taken. Bold."}
+{"ts": 1789600087.96, "type": "engine_move", "engine": "minimax", "move": 3, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "14b66e3", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789600087.96, "type": "speak", "point": "own_move", "text": "I'll take the middle-left. Draw an O there for me."}
+{"ts": 1789600087.96, "type": "agent_move_announced", "cell": 3}
+{"ts": 1789600201.415, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600204.885, "type": "session_start", "git_sha": "3c6c585", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600371.363, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600371.587, "type": "session_start", "git_sha": "3c6c585", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600397.353, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600400.677, "type": "session_start", "git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600675.76, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600676.044, "type": "session_start", "git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600680.878, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600680.878, "type": "control", "action": "start"}
+{"ts": 1789600681.972, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789600681.974, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 1.16, "reasoning": "", "provenance": {"git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789600681.974, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600681.974, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600681.974, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600691.124, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600691.124, "type": "control", "action": "start"}
+{"ts": 1789600692.676, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789600692.677, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789600692.677, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600692.677, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600692.677, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600732.187, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600732.461, "type": "session_start", "git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600739.362, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600739.714, "type": "session_start", "git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}
+{"ts": 1789600743.574, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600743.575, "type": "control", "action": "start"}
+{"ts": 1789600744.792, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 2 X and 1 O already played, confidence 96%. Resuming. My move \u2014 one second."}
+{"ts": 1789600744.792, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.2, "reasoning": "", "provenance": {"git_sha": "5fd41c4", "config_hash": "e85172aaf610", "memory_version": 5}}
+{"ts": 1789600744.792, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600744.792, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600744.792, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600783.674, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600787.003, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600792.06, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600792.355, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600797.863, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600797.863, "type": "control", "action": "start"}
+{"ts": 1789600799.001, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789600799.002, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.83, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600799.003, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600799.003, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600799.003, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600803.942, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600808.438, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600827.106, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789600827.106, "type": "control", "action": "start"}
+{"ts": 1789600828.269, "type": "speak", "point": "lock_resume", "text": "Board locked at 96%, mid-game: 2 X, 1 O on the page. My move \u2014 one second."}
+{"ts": 1789600828.269, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.22, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600828.27, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600828.27, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600828.27, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600878.516, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600878.956, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600883.888, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789600891.391, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600898.733, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600898.733, "type": "control", "action": "start"}
+{"ts": 1789600899.927, "type": "speak", "point": "lock_resume", "text": "Board locked at 96%, mid-game: 2 X, 1 O on the page. My move \u2014 one second."}
+{"ts": 1789600899.927, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600899.927, "type": "speak", "point": "own_move", "text": "I play the bottom-center. Put an O there and take your hand out of frame."}
+{"ts": 1789600899.927, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600899.928, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600904.714, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600928.266, "type": "session_start", "git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600931.993, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600931.993, "type": "control", "action": "start"}
+{"ts": 1789600933.651, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 2 X and 1 O already played, confidence 96%. Resuming. My move \u2014 one second."}
+{"ts": 1789600933.652, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.24, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600933.652, "type": "speak", "point": "own_move", "text": "I play the bottom-center. Put an O there and take your hand out of frame."}
+{"ts": 1789600933.652, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600933.652, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600938.587, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600938.587, "type": "control", "action": "start"}
+{"ts": 1789600939.649, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 2 X, 1 O. My move \u2014 one second."}
+{"ts": 1789600939.65, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.2, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600939.65, "type": "speak", "point": "own_move", "text": "I'll take the bottom-center. Draw an O there for me."}
+{"ts": 1789600939.65, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600939.65, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600942.214, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789600942.215, "type": "control", "action": "start"}
+{"ts": 1789600943.398, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 2 X and 1 O already played, confidence 95%. Resuming. My move \u2014 one second."}
+{"ts": 1789600943.399, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.2, "reasoning": "", "provenance": {"git_sha": "665f1fb", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600943.399, "type": "speak", "point": "own_move", "text": "I play the bottom-center. Put an O there and take your hand out of frame."}
+{"ts": 1789600943.399, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600943.399, "type": "board_lock", "conf": 0.95, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600949.317, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789600958.608, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}
+{"ts": 1789600969.698, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789600969.698, "type": "control", "action": "start"}
+{"ts": 1789600970.78, "type": "speak", "point": "lock_resume", "text": "Board locked at 96%, mid-game: 2 X, 1 O on the page. My move \u2014 one second."}
+{"ts": 1789600970.781, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.2, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600970.781, "type": "speak", "point": "own_move", "text": "My move: bottom-center. Please draw my O in that cell."}
+{"ts": 1789600970.781, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789600970.781, "type": "board_lock", "conf": 0.96, "board": ["O", "X", "", "", "X", "", "", "", ""]}
+{"ts": 1789600994.53, "type": "confirm", "cell": 7, "mark": "O", "conf": 0.92, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789600994.53, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789601006.281, "type": "confirm", "cell": 5, "mark": "X", "conf": 0.84, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601006.281, "type": "speak", "point": "react", "text": "Middle-right \u2014 noted."}
+{"ts": 1789601006.281, "type": "engine_move", "engine": "minimax", "move": 3, "ms": 0.22, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601006.281, "type": "speak", "point": "own_move", "text": "I play the middle-left. Put an O there and take your hand out of frame."}
+{"ts": 1789601006.282, "type": "agent_move_announced", "cell": 3}
+{"ts": 1789601042.103, "type": "confirm", "cell": 3, "mark": "O", "conf": 0.91, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601042.103, "type": "speak", "point": "verified", "text": "That's my O, confirmed. You're up."}
+{"ts": 1789601055.788, "type": "confirm", "cell": 6, "mark": "X", "conf": 0.85, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601055.788, "type": "speak", "point": "react", "text": "Bottom-left \u2014 noted."}
+{"ts": 1789601055.788, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 0.2, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601055.788, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789601055.789, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789601074.538, "type": "speak", "point": "arbiter_look", "text": "That top-right read is shaky. One moment, taking a closer look."}
+{"ts": 1789601074.538, "type": "arbiter_invoked", "changed": [[2, "", "O"]], "conf": 0.65}
+{"ts": 1789601074.749, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789601074.749, "type": "speak", "point": "arbiter_fail", "text": "Still ambiguous after a closer look. Redraw it thicker, or tell me to accept the reading."}
+{"ts": 1789601074.749, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789601077.535, "type": "speak", "point": "mismatch_wrong_mark", "text": "That's X in the top-right \u2014 I called O. Fix the page or say the word."}
+{"ts": 1789601077.536, "type": "mismatch", "expected": 2, "changed": [[2, "", "X"]]}
+{"ts": 1789601079.285, "type": "confirm", "cell": 2, "mark": "O", "conf": 0.9, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601079.285, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789601084.553, "type": "confirm", "cell": 8, "mark": "X", "conf": 0.91, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 5}}
+{"ts": 1789601084.554, "type": "speak", "point": "react", "text": "Bottom-right \u2014 noted."}
+{"ts": 1789601084.554, "type": "game_result", "result": "draw", "moves": 9, "misreads": 0, "arbiter_calls": 1, "mismatches": 2, "memory": {"games_played": 5, "misreads": 0, "arbiter_calls": 1, "t_empty": 0.01}}
+{"ts": 1789601084.554, "type": "speak", "point": "game_over", "text": "Draw. This session: 0 misreads, 1 arbiter call \u2014 logged for next time. Game 5 on record."}
+{"ts": 1789601096.288, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789601096.289, "type": "control", "action": "start"}
+{"ts": 1789601097.534, "type": "board_lock", "conf": 0.87, "board": ["O", "X", "O", "O", "X", "X", "X", "O", "X"]}
+{"ts": 1789601097.535, "type": "game_result", "result": "draw", "moves": 9, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 6, "misreads": 0, "arbiter_calls": 1, "t_empty": 0.01}}
+{"ts": 1789601097.535, "type": "speak", "point": "game_over", "text": "That's the game \u2014 draw. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 6 on record."}
+{"ts": 1789601181.149, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789601181.149, "type": "control", "action": "start"}
+{"ts": 1789601183.295, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 99%. You're X, you start. Go ahead."}
+{"ts": 1789601183.295, "type": "board_lock", "conf": 0.99, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789601206.802, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789601206.802, "type": "control", "action": "start"}
+{"ts": 1789601208.022, "type": "speak", "point": "lock", "text": "Board locked at 97%. You're X \u2014 your move."}
+{"ts": 1789601208.022, "type": "board_lock", "conf": 0.97, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789601241.278, "type": "confirm", "cell": 5, "mark": "X", "conf": 0.8, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789601241.278, "type": "speak", "point": "react", "text": "I saw that X land in the middle-right."}
+{"ts": 1789601241.285, "type": "engine_move", "engine": "minimax", "move": 2, "ms": 6.4, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789601241.285, "type": "speak", "point": "own_move", "text": "I'll take the top-right. Draw an O there for me."}
+{"ts": 1789601241.285, "type": "agent_move_announced", "cell": 2}
+{"ts": 1789601252.284, "type": "speak", "point": "mismatch_wrong_mark", "text": "I asked for O in the top-right but I'm reading X there. Fix it, or tell me to accept the reading."}
+{"ts": 1789601252.284, "type": "mismatch", "expected": 2, "changed": [[2, "", "X"]]}
+{"ts": 1789601255.031, "type": "confirm", "cell": 2, "mark": "O", "conf": 0.89, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789601255.031, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789601262.596, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789601262.597, "type": "control", "action": "start"}
+{"ts": 1789601263.777, "type": "speak", "point": "lock_resume", "text": "Board locked at 95%, mid-game: 1 X, 1 O on the page. Your move."}
+{"ts": 1789601263.778, "type": "board_lock", "conf": 0.95, "board": ["", "", "O", "", "", "X", "", "", ""]}
+{"ts": 1789601281.03, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789611997.806, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}
+{"ts": 1789612009.517, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789626703.313, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}
+{"ts": 1789626714.67, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789626714.67, "type": "control", "action": "start"}
+{"ts": 1789626715.885, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 1 X, 1 O. Your move."}
+{"ts": 1789626715.885, "type": "board_lock", "conf": 0.94, "board": ["", "", "O", "", "", "X", "", "", ""]}
+{"ts": 1789626753.891, "type": "confirm", "cell": 4, "mark": "X", "conf": 0.87, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626753.891, "type": "speak", "point": "react", "text": "Center \u2014 noted."}
+{"ts": 1789626753.892, "type": "engine_move", "engine": "minimax", "move": 3, "ms": 0.24, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626753.892, "type": "speak", "point": "own_move", "text": "I play the middle-left. Put an O there and take your hand out of frame."}
+{"ts": 1789626753.892, "type": "agent_move_announced", "cell": 3}
+{"ts": 1789626761.133, "type": "confirm", "cell": 3, "mark": "O", "conf": 0.9, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626761.133, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789626770.636, "type": "speak", "point": "arbiter_look", "text": "Not sure about the top-center \u2014 looking closer."}
+{"ts": 1789626770.636, "type": "arbiter_invoked", "changed": [[1, "", "X"]], "conf": 0.5}
+{"ts": 1789626770.794, "type": "arbiter_failed", "error": "Client error '401 Unauthorized' for url 'https://openrouter.ai/api/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401"}
+{"ts": 1789626770.794, "type": "speak", "point": "arbiter_fail", "text": "I can't resolve that mark on my own. Fix the page, or tell me to accept my best guess."}
+{"ts": 1789626770.794, "type": "mismatch", "detail": "arbiter unavailable"}
+{"ts": 1789626790.305, "type": "speak", "point": "accepted", "text": "Fine, we play it as it lies."}
+{"ts": 1789626790.305, "type": "mismatch_resolved", "via": "accept_reading"}
+{"ts": 1789626790.306, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.25, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626790.306, "type": "speak", "point": "own_move", "text": "I play the bottom-center. Put an O there and take your hand out of frame."}
+{"ts": 1789626790.306, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789626796.16, "type": "confirm", "cell": 7, "mark": "O", "conf": 0.89, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626796.16, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789626805.154, "type": "confirm", "cell": 0, "mark": "X", "conf": 0.88, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626805.154, "type": "speak", "point": "react", "text": "I saw that X land in the top-left."}
+{"ts": 1789626805.155, "type": "engine_move", "engine": "minimax", "move": 8, "ms": 0.26, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626805.155, "type": "speak", "point": "own_move", "text": "My move: bottom-right. Please draw my O in that cell."}
+{"ts": 1789626805.155, "type": "agent_move_announced", "cell": 8}
+{"ts": 1789626809.827, "type": "session_end", "fsm": "AWAIT_DRAW"}
+{"ts": 1789626813.219, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}
+{"ts": 1789626824.464, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789626824.465, "type": "control", "action": "start"}
+{"ts": 1789626826.152, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 4 X, 4 O. Your move."}
+{"ts": 1789626826.152, "type": "board_lock", "conf": 0.86, "board": ["X", "X", "O", "O", "X", "X", "", "O", "O"]}
+{"ts": 1789626834.446, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789626834.447, "type": "control", "action": "reset"}
+{"ts": 1789626835.642, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 4 X and 4 O already played, confidence 86%. Resuming. Your move."}
+{"ts": 1789626835.642, "type": "board_lock", "conf": 0.86, "board": ["X", "X", "O", "O", "X", "X", "", "O", "O"]}
+{"ts": 1789626849.145, "type": "confirm", "cell": 6, "mark": "X", "conf": 0.89, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 7}}
+{"ts": 1789626849.145, "type": "speak", "point": "react", "text": "I saw that X land in the bottom-left."}
+{"ts": 1789626849.146, "type": "game_result", "result": "draw", "moves": 9, "misreads": 0, "arbiter_calls": 0, "mismatches": 0, "memory": {"games_played": 7, "misreads": 0, "arbiter_calls": 1, "t_empty": 0.01}}
+{"ts": 1789626849.146, "type": "speak", "point": "game_over", "text": "Draw. This session: 0 misreads, 0 arbiter calls \u2014 logged for next time. Game 7 on record."}
+{"ts": 1789626891.948, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789626891.948, "type": "control", "action": "start"}
+{"ts": 1789626893.146, "type": "speak", "point": "lock", "text": "Got the grid, confidence 99%. Draw your X when ready."}
+{"ts": 1789626893.146, "type": "board_lock", "conf": 0.99, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789626902.418, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789626902.418, "type": "control", "action": "start"}
+{"ts": 1789626905.898, "type": "speak", "point": "lock", "text": "I see the board \u2014 confidence 99%. You're X, you start. Go ahead."}
+{"ts": 1789626905.899, "type": "board_lock", "conf": 0.99, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789626914.243, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789626918.701, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789626925.183, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789626925.183, "type": "control", "action": "start"}
+{"ts": 1789626927.008, "type": "speak", "point": "lock", "text": "Got the grid, confidence 99%. Draw your X when ready."}
+{"ts": 1789626927.008, "type": "board_lock", "conf": 0.99, "board": ["", "", "", "", "", "", "", "", ""]}
+{"ts": 1789626933.763, "type": "confirm", "cell": 4, "mark": "X", "conf": 0.89, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626933.763, "type": "speak", "point": "react", "text": "Center taken. Bold."}
+{"ts": 1789626933.771, "type": "engine_move", "engine": "minimax", "move": 0, "ms": 6.97, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626933.771, "type": "speak", "point": "own_move", "text": "I'll take the top-left. Draw an O there for me."}
+{"ts": 1789626933.771, "type": "agent_move_announced", "cell": 0}
+{"ts": 1789626946.51, "type": "confirm", "cell": 0, "mark": "O", "conf": 0.9, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626946.51, "type": "speak", "point": "verified", "text": "Got it. Your turn."}
+{"ts": 1789626955.555, "type": "confirm", "cell": 1, "mark": "X", "conf": 0.86, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626955.555, "type": "speak", "point": "react", "text": "Top-center taken. Bold."}
+{"ts": 1789626955.556, "type": "engine_move", "engine": "minimax", "move": 7, "ms": 0.3, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626955.556, "type": "speak", "point": "own_move", "text": "I play the bottom-center. Put an O there and take your hand out of frame."}
+{"ts": 1789626955.556, "type": "agent_move_announced", "cell": 7}
+{"ts": 1789626961.012, "type": "confirm", "cell": 7, "mark": "O", "conf": 0.92, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626961.013, "type": "speak", "point": "verified", "text": "Ink matches the call. Your move."}
+{"ts": 1789626979.019, "type": "confirm", "cell": 2, "mark": "X", "conf": 0.84, "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626979.02, "type": "speak", "point": "react", "text": "I saw that X land in the top-right."}
+{"ts": 1789626979.02, "type": "engine_move", "engine": "minimax", "move": 6, "ms": 0.21, "reasoning": "", "provenance": {"git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}}
+{"ts": 1789626979.02, "type": "speak", "point": "own_move", "text": "My move: bottom-left. Please draw my O in that cell."}
+{"ts": 1789626979.02, "type": "agent_move_announced", "cell": 6}
+{"ts": 1789627008.667, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789627008.668, "type": "control", "action": "reset"}
+{"ts": 1789627016.017, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789627016.017, "type": "control", "action": "start"}
+{"ts": 1789627034.703, "type": "session_end", "fsm": "CALIBRATING"}
+{"ts": 1789627034.999, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789627049.174, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789627049.174, "type": "control", "action": "start"}
+{"ts": 1789627058.842, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789627058.842, "type": "control", "action": "start"}
+{"ts": 1789627080.923, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789627080.923, "type": "control", "action": "reset"}
+{"ts": 1789627098.485, "type": "session_end", "fsm": "CALIBRATING"}
+{"ts": 1789627098.717, "type": "session_start", "git_sha": "b91f06e", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789627105.603, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789627105.604, "type": "control", "action": "reset"}
+{"ts": 1789627109.091, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789627109.091, "type": "control", "action": "start"}
+{"ts": 1789628062.358, "type": "speak", "point": "reset", "text": "Reset. Give me a new grid when you're ready."}
+{"ts": 1789628062.359, "type": "control", "action": "reset"}
+{"ts": 1789628063.418, "type": "speak", "point": "lock_resume", "text": "Board locked at 93%, mid-game: 3 X, 3 O on the page. Your move."}
+{"ts": 1789628063.418, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789628066.938, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789628066.938, "type": "control", "action": "start"}
+{"ts": 1789628077.43, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789628077.43, "type": "control", "action": "reset"}
+{"ts": 1789628079.935, "type": "speak", "point": "lock_resume", "text": "Board locked at 93%, mid-game: 3 X, 3 O on the page. Your move."}
+{"ts": 1789628079.935, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789628180.18, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789628183.599, "type": "session_start", "git_sha": "b3ec737", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789629654.178, "type": "session_end", "fsm": "IDLE"}
+{"ts": 1789629654.645, "type": "session_start", "git_sha": "b3ec737", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789629694.583, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789629694.584, "type": "control", "action": "start"}
+{"ts": 1789629719.477, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 3 X and 3 O already played, confidence 92%. Resuming. Your move."}
+{"ts": 1789629719.477, "type": "board_lock", "conf": 0.92, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789629723.853, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789629724.359, "type": "session_start", "git_sha": "b3ec737", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789629731.168, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789629731.168, "type": "control", "action": "start"}
+{"ts": 1789629732.666, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 3 X and 3 O already played, confidence 93%. Resuming. Your move."}
+{"ts": 1789629732.667, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789629744.254, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789629744.502, "type": "session_start", "git_sha": "b3ec737", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789629748.041, "type": "speak", "point": "start", "text": "Looking for the board. Hold the camera steady over the page."}
+{"ts": 1789629748.042, "type": "control", "action": "start"}
+{"ts": 1789629749.185, "type": "speak", "point": "lock_resume", "text": "Picking up where this page left off \u2014 3 X, 3 O. Your move."}
+{"ts": 1789629749.185, "type": "board_lock", "conf": 0.9, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789629765.686, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789629765.687, "type": "control", "action": "reset"}
+{"ts": 1789629767.188, "type": "speak", "point": "lock_resume", "text": "Board locked at 93%, mid-game: 3 X, 3 O on the page. Your move."}
+{"ts": 1789629767.188, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789629772.341, "type": "speak", "point": "reset", "text": "Fresh board. Point me at a clean page."}
+{"ts": 1789629772.341, "type": "control", "action": "reset"}
+{"ts": 1789629773.437, "type": "speak", "point": "lock_resume", "text": "Board locked at 93%, mid-game: 3 X, 3 O on the page. Your move."}
+{"ts": 1789629773.437, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789630580.449, "type": "session_end", "fsm": "HUMAN_TURN"}
+{"ts": 1789630580.96, "type": "session_start", "git_sha": "3b54f63", "config_hash": "276b414fec8c", "memory_version": 8}
+{"ts": 1789630587.274, "type": "speak", "point": "start", "text": "Show me the grid \u2014 thick strokes, page flat."}
+{"ts": 1789630587.274, "type": "control", "action": "start"}
+{"ts": 1789630588.488, "type": "speak", "point": "lock_resume", "text": "I see the board \u2014 3 X and 3 O already played, confidence 93%. Resuming. Your move."}
+{"ts": 1789630588.488, "type": "board_lock", "conf": 0.93, "board": ["O", "X", "X", "", "X", "", "O", "O", ""]}
+{"ts": 1789630835.201, "type": "session_end", "fsm": "HUMAN_TURN"}

@@ -22,6 +22,16 @@ consulted only when classical CV admits uncertainty; move selection is
 minimax behind an `Engine` protocol with a game-agnostic LLM engine one
 config line away.
 
+### Session log, as actually produced
+
+[`events-sample.jsonl`](events-sample.jsonl) is a verbatim snapshot of
+`runs/tic_tac_toe/events.jsonl` after 7 real games — every board lock,
+confirm, engine decision, spoken line, mismatch, and game result, in order.
+`session_start` records carry the provenance (git SHA, config hash, memory
+version); `game_result` records show the per-game counters and the memory
+they updated. Useful greps: `grep game_result` for the game history,
+`grep confirm` for every accepted mark with its confidence.
+
 ### Learned state, as actually produced
 
 [`memory-sample.json`](memory-sample.json) is a verbatim snapshot of
