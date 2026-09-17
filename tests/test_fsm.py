@@ -39,16 +39,17 @@ def points(effects):
     return [e.point for e in effects if isinstance(e, Announce)]
 
 
-def test_calibration_requires_consecutive_locks():
+def test_calibration_majority_lock_tolerates_hiccups():
+    """One dropped grid frame or one flickered reading must not reset the
+    lock — real cameras hiccup every few frames."""
     f, s = fsm(), Session()
     f.step(s, ControlEvent("start"))
     assert s.state == "CALIBRATING"
-    feed(f, s, [""] * 9, P.n_calib - 1)
+    feed(f, s, [""] * 9, P.n_calib - 2)
+    f.step(s, frame([], grid=False))                    # dropped grid frame
+    f.step(s, frame(["O"] + [""] * 8))                  # single flicker
     assert s.state == "CALIBRATING"
-    f.step(s, frame([], grid=False))          # streak broken
-    feed(f, s, [""] * 9, P.n_calib - 1)
-    assert s.state == "CALIBRATING"
-    effects = feed(f, s, [""] * 9, 1)
+    effects = feed(f, s, [""] * 9, 2)                   # majority reached
     assert s.state == "HUMAN_TURN"
     assert points(effects) == ["lock"]
 
@@ -86,10 +87,11 @@ def test_prefilled_finished_board_is_game_over():
 
 
 def test_calibration_needs_stable_readings_not_just_grid():
-    """A grid that reads differently every frame must not lock."""
+    """A grid that reads differently every frame must not lock — alternating
+    hypotheses never reach the 70% majority."""
     f, s = fsm(), Session()
     f.step(s, ControlEvent("start"))
-    for i in range(P.n_calib * 3):
+    for i in range(P.n_calib * 6):
         b = [""] * 9
         b[i % 2] = "X"                        # reading flaps between two cells
         f.step(s, frame(b))
@@ -372,6 +374,18 @@ def test_human_win_ends_game():
     assert s.state == "GAME_OVER"
     ends = [e for e in effects if isinstance(e, GameEnded)]
     assert ends and ends[0].result == "human"
+
+
+def test_start_is_inert_mid_game():
+    """Start begins watching; only Reset may abandon a game in progress."""
+    f, s = fsm(), Session()
+    start_to_human_turn(f, s)
+    feed(f, s, ["X"] + [""] * 8, P.k_stable)
+    board_before = list(s.board)
+    effects = f.step(s, ControlEvent("start"))
+    assert s.board == board_before
+    assert s.state != "CALIBRATING"
+    assert points(effects) == []
 
 
 def test_reset_mid_game():

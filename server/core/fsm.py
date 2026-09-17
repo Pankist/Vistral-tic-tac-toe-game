@@ -72,7 +72,7 @@ class Session:
     state: str = "IDLE"
     board: list[str] = field(default_factory=lambda: [""] * 9)
     history: list[tuple[str, int]] = field(default_factory=list)
-    calib_streak: int = 0
+    calib_window: list = field(default_factory=list)
     candidate: tuple | None = None
     streak: int = 0
     expected_cell: int | None = None
@@ -107,6 +107,11 @@ class FSM:
 
     def _control(self, s: Session, e: ControlEvent) -> list:
         if e.action in ("start", "reset"):
+            # Start begins watching and is inert mid-game (no accidental
+            # wipes); Reset is the deliberate abort and works anywhere.
+            if e.action == "start" and s.state not in ("IDLE", "GAME_OVER"):
+                return [LogEvent("control", {"action": "start",
+                                             "ignored_in": s.state})]
             fresh = Session(state="CALIBRATING")
             s.__dict__.update(fresh.__dict__)
             point = "start" if e.action == "start" else "reset"
@@ -149,22 +154,19 @@ class FSM:
 
         if s.state == "CALIBRATING":
             if p.grid_found:
+                # sliding-window majority, not a consecutive streak: one
+                # flickering borderline cell or one dropped grid frame must
+                # not reset the lock — but a genuinely flapping reading never
+                # reaches majority and never becomes the starting truth
                 labels = p.labels()
-                # lock needs N consecutive *identical readings*, not just N
-                # frames with some grid — a prefilled board must read stably
-                # before it becomes the starting truth
-                if labels == s.candidate:
-                    s.calib_streak += 1
-                else:
-                    s.candidate, s.calib_streak = labels, 1
-                if s.calib_streak >= self.p.n_calib:
+                s.calib_window.append(labels)
+                del s.calib_window[:-10]
+                n = s.calib_window.count(labels)
+                if n >= self.p.n_calib and n / len(s.calib_window) >= 0.7:
                     s.board = list(labels)
-                    s.reset_candidate()
+                    s.calib_window = []
                     s.last_conf = _mean_conf(p)
                     return self._lock(s)
-            else:
-                s.calib_streak = 0
-                s.candidate = None
             return []
 
         if not p.grid_found:
