@@ -22,6 +22,17 @@ consulted only when classical CV admits uncertainty; move selection is
 minimax behind an `Engine` protocol with a game-agnostic LLM engine one
 config line away.
 
+### Learned state, as actually produced
+
+[`memory-sample.json`](memory-sample.json) is a verbatim snapshot of
+`runs/tic_tac_toe/memory.json` after 7 real games (2026-09-17): the agent
+observed ~200 ink readings from known-empty cells on the actual demo paper,
+saw they sit at 0.000–0.003, and tightened `t_empty` from the 0.03 default to
+the clamp floor 0.01 — more sensitive to faint marks on this specific
+setup, and unable to drift below the hard-coded bound in `store.CLAMPS`.
+Misread/arbiter/mismatch counters in the same file are the improvement
+metrics across games.
+
 ## The game-agnostic expansion (Section 3)
 
 ```mermaid
