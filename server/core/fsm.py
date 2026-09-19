@@ -155,7 +155,9 @@ class FSM:
                     })
                 ]
             else:
-                s.state = "MONITORING"
+                # Failed recognition - go to STANDBY and STOP
+                # User must click Rescan to try again
+                s.state = "STANDBY"
                 s.settle_count = 0
                 return [Announce("no_puzzle"), LogEvent("no_puzzle_found", {"status": status})]
 
