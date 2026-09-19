@@ -371,7 +371,7 @@ class SessionRunner:
         }
 
         # Add submarine-specific fields
-        if cfg.ACTIVE_GAME == "submarine":
+        if self.game.name == "submarine":
             payload["submarine"] = {
                 "puzzle_text": s.puzzle_text,
                 "puzzle_options": s.puzzle_options,

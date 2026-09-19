@@ -387,6 +387,9 @@
                                     (s.expected_cell != null ? CELL_NAMES[s.expected_cell] : 'cell')],
     MISMATCH:   ['pill-coral', () => 'MISMATCH — page differs from expectation'],
     GAME_OVER:  ['pill-teal',  () => 'GAME OVER'],
+    MONITORING: ['pill-amber', () => 'MONITORING — waiting for puzzle'],
+    SOLVING:    ['pill-teal',  () => 'SOLVING — analyzing puzzle'],
+    STANDBY:    ['pill-grey',  () => 'STANDBY — answer displayed'],
   };
 
   function onState(s) {

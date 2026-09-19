@@ -146,7 +146,7 @@ class FSM:
                 s.state = "SOLVING"
                 return [
                     SolvePuzzle(s.puzzle_text, s.puzzle_options),
-                    Announce("solving"),
+                    Announce("solving", option_count=len(s.puzzle_options)),
                     LogEvent("puzzle_recognized", {"puzzle": s.puzzle_text})
                 ]
             else:
