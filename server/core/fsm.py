@@ -141,17 +141,14 @@ class FSM:
         if e.action == "recognize_result":
             result = e.payload or {}
             if result.get("has_puzzle"):
-                s.puzzle_text = result.get("puzzle_text", "")
-                s.puzzle_options = result.get("options", [])
+                s.puzzle_text = result.get("question", "")
                 s.answer = result.get("answer", "")
-                reasoning = result.get("reasoning", "")
                 s.state = "STANDBY"
                 return [
                     Announce("solved", {"answer": s.answer}),
                     LogEvent("puzzle_solved", {
-                        "puzzle": s.puzzle_text,
-                        "answer": s.answer,
-                        "reasoning": reasoning
+                        "question": s.puzzle_text,
+                        "answer": s.answer
                     })
                 ]
             else:
