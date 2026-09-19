@@ -660,6 +660,8 @@
     if (isSubmarine) {
       $('puzzleText').textContent = 'Waiting for puzzle...';
       $('answerText').textContent = '';
+      positionOverlayOnVideo();
+      drawSubmarineBoundary();
     }
 
     // Reset when switching games
@@ -725,6 +727,7 @@
       corners[dragCorner].y = Math.max(0, Math.min(1, y));
 
       updateCornerPosition(dragCorner);
+      drawSubmarineBoundary();
 
       // Send updated corners to server
       send({
