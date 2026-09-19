@@ -43,7 +43,12 @@ class SubmarineEngine:
                 "cost": result.get("cost", {}),
             })
 
-            recognition = parse_strict_json(result["content"])
+            # Log raw response for debugging
+            raw_content = result["content"]
+            print(f"[SUBMARINE] Raw API response: {raw_content[:500]}")
+
+            recognition = parse_strict_json(raw_content)
+            print(f"[SUBMARINE] Parsed JSON: {recognition}")
             return recognition
 
         except (LLMUnavailable, ValueError) as e:
