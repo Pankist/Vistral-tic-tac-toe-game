@@ -16,7 +16,8 @@ import os
 from pathlib import Path
 
 # --- which game is mounted ---------------------------------------------------
-ACTIVE_GAME = "tic_tac_toe"
+ACTIVE_GAME = os.environ.get("ACTIVE_GAME", "tic_tac_toe")  # tic_tac_toe | submarine
+AVAILABLE_GAMES = ["tic_tac_toe", "submarine"]
 
 # --- frame ingestion ----------------------------------------------------------
 FPS = 4                      # client obeys the server: fetched via GET /config
@@ -35,9 +36,9 @@ ANNOUNCER = "template"       # template | llm (llm adds one flavor line, 2s budg
 VOICE = "on"                 # on | off — client speechSynthesis default (UI can toggle)
 
 # --- models (used only when confidence drops / engine=llm) ---------------------
-MODEL_ARBITER = "anthropic/claude-sonnet-4.6"
-MODEL_ENGINE = "anthropic/claude-sonnet-4.6"
-MODEL_ANNOUNCER = "anthropic/claude-sonnet-4.6"
+MODEL_ARBITER = "claude-sonnet-5"
+MODEL_ENGINE = "claude-sonnet-5"
+MODEL_ANNOUNCER = "claude-haiku-4-5-20251001"   # flavor lines: speed over depth
 LLM_TIMEOUT_S = 6.0
 ANNOUNCER_BUDGET_S = 2.0
 
@@ -60,7 +61,7 @@ def _load_dotenv() -> None:
 
 _load_dotenv()
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 PORT = int(os.environ.get("PORT", "8000"))
 S3_BUCKET = os.environ.get("S3_BUCKET", "")
 
@@ -75,7 +76,7 @@ def _public(mod) -> dict:
     }
 
 
-_SECRET_KEYS = {"OPENROUTER_API_KEY"}
+_SECRET_KEYS = {"ANTHROPIC_API_KEY"}
 
 
 def merged() -> dict:

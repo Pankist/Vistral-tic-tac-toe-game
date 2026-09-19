@@ -9,14 +9,14 @@ move regardless of engine — a hallucinating model cannot corrupt state.
 """
 
 from server.core import config as cfg
-from server.core.llm import LLMUnavailable, OpenRouterClient, parse_strict_json
+from server.core.llm import LLMUnavailable, AnthropicClient, parse_strict_json
 from server.core.protocols import Board, Engine, Game, Move
 
 
 class LLMEngine:
     name = "llm"
 
-    def __init__(self, game: Game, client: OpenRouterClient,
+    def __init__(self, game: Game, client: AnthropicClient,
                  fallback: Engine, prompts, log=None):
         self.game = game
         self.client = client

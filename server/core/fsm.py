@@ -55,6 +55,19 @@ class GameEnded:
 
 
 @dataclass
+class RecognizePuzzle:
+    """Submarine: trigger vision-based puzzle recognition."""
+    image: Any = None
+
+
+@dataclass
+class SolvePuzzle:
+    """Submarine: trigger puzzle solving."""
+    puzzle_text: str = ""
+    options: list[str] = field(default_factory=list)
+
+
+@dataclass
 class LogEvent:
     kind: str
     data: dict
@@ -85,6 +98,13 @@ class Session:
     arbiter_calls: int = 0
     mismatches: int = 0
 
+    # submarine-specific state
+    puzzle_text: str = ""
+    puzzle_options: list[str] = field(default_factory=list)
+    answer: str = ""
+    corners: list[tuple[int, int]] = field(default_factory=list)
+    settle_count: int = 0
+
     def reset_candidate(self) -> None:
         self.candidate, self.streak = None, 0
 
@@ -106,13 +126,52 @@ class FSM:
     # --- control events -------------------------------------------------------
 
     def _control(self, s: Session, e: ControlEvent) -> list:
+        # Submarine-specific controls
+        if e.action == "set_corners":
+            s.corners = e.payload or []
+            return [LogEvent("control", {"action": "set_corners", "corners": s.corners})]
+
+        if e.action == "rescan":
+            s.state = "MONITORING"
+            s.settle_count = 0
+            s.puzzle_text = ""
+            s.answer = ""
+            return [Announce("monitoring"), LogEvent("control", {"action": "rescan"})]
+
+        if e.action == "recognize_result":
+            result = e.payload or {}
+            if result.get("has_puzzle"):
+                s.puzzle_text = result.get("puzzle_text", "")
+                s.puzzle_options = result.get("options", [])
+                s.state = "SOLVING"
+                return [
+                    SolvePuzzle(s.puzzle_text, s.puzzle_options),
+                    Announce("solving"),
+                    LogEvent("puzzle_recognized", {"puzzle": s.puzzle_text})
+                ]
+            else:
+                s.state = "MONITORING"
+                s.settle_count = 0
+                return [Announce("no_puzzle"), LogEvent("no_puzzle_found", {})]
+
+        if e.action == "solve_result":
+            solution = e.payload or {}
+            s.answer = solution.get("answer", "Error")
+            s.state = "STANDBY"
+            return [
+                Announce("solved", {"answer": s.answer}),
+                LogEvent("puzzle_solved", {"answer": s.answer, "reasoning": solution.get("reasoning")})
+            ]
+
         if e.action in ("start", "reset"):
             # Start begins watching and is inert mid-game (no accidental
             # wipes); Reset is the deliberate abort and works anywhere.
             if e.action == "start" and s.state not in ("IDLE", "GAME_OVER"):
                 return [LogEvent("control", {"action": "start",
                                              "ignored_in": s.state})]
-            fresh = Session(state="CALIBRATING")
+            # For submarine, start goes to MONITORING; for tic_tac_toe, CALIBRATING
+            initial_state = "MONITORING" if self.game.name == "submarine" else "CALIBRATING"
+            fresh = Session(state=initial_state)
             s.__dict__.update(fresh.__dict__)
             point = "start" if e.action == "start" else "reset"
             return [Announce(point), LogEvent("control", {"action": e.action})]
@@ -149,6 +208,25 @@ class FSM:
     # --- perception events ----------------------------------------------------
 
     def _perception(self, s: Session, p: PerceptionResult) -> list:
+        # Submarine game perception flow
+        if self.game.name == "submarine":
+            if s.state == "MONITORING":
+                # Check if image has settled (no changes for N frames)
+                change_info = p.change_info if hasattr(p, 'change_info') else None
+                if change_info:
+                    if change_info.get('settled'):
+                        s.state = "RECOGNIZING"
+                        s.settle_count = change_info.get('stable_count', 0)
+                        return [
+                            RecognizePuzzle(image=p.raw_frame if hasattr(p, 'raw_frame') else None),
+                            Announce("settled"),
+                            LogEvent("image_settled", {"settle_count": s.settle_count})
+                        ]
+                return []
+            # Other submarine states don't process perception
+            return []
+
+        # Tic-tac-toe perception flow
         if p.motion or s.state in ("IDLE", "AGENT_TURN", "GAME_OVER"):
             return []
 

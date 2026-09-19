@@ -72,6 +72,13 @@
   video { max-width:100%; max-height:100%; }
   #overlay { position:absolute; pointer-events:none; }
 
+  /* submarine corner selection */
+  #cornerOverlay { position:absolute; inset:0; display:none; pointer-events:auto; }
+  #cornerOverlay.show { display:block; }
+  .corner { position:absolute; width:20px; height:20px; border:3px solid var(--coral);
+            border-radius:50%; cursor:move; background:rgba(226,87,76,0.3); }
+  .corner:hover { background:var(--coral); }
+
   .agentbody { flex:1; display:flex; align-items:center; justify-content:center;
                padding:16px; min-height:0; position:relative; }
   #readGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
@@ -158,9 +165,14 @@
   <div class="hcontrols">
     <div class="wsdot" id="wsDot"><i></i><span id="wsText">connecting</span></div>
     <div class="role" id="rolePill">PLAYER</div>
+    <select id="gameSelect" aria-label="Game mode">
+      <option value="tic_tac_toe">Tic-Tac-Toe</option>
+      <option value="submarine">Submarine</option>
+    </select>
     <select id="camSelect" aria-label="Camera device"></select>
     <button id="btnStart">Start</button>
     <button id="btnReset">Reset</button>
+    <button id="btnRescan" style="display:none;">Rescan</button>
   </div>
 </header>
 
@@ -171,6 +183,12 @@
     <div class="camwrap">
       <video id="video" autoplay playsinline muted></video>
       <canvas id="overlay"></canvas>
+      <div id="cornerOverlay">
+        <div class="corner" id="corner0" style="top:10%; left:10%;"></div>
+        <div class="corner" id="corner1" style="top:10%; right:10%;"></div>
+        <div class="corner" id="corner2" style="bottom:10%; right:10%;"></div>
+        <div class="corner" id="corner3" style="bottom:10%; left:10%;"></div>
+      </div>
     </div>
     <div class="pstrip">
       <div id="tFps">fps —</div>
@@ -570,6 +588,86 @@
     if (speaking) speakText('Voice on.');
     else speechSynthesis?.cancel();
   };
+
+  // --- game selector ---------------------------------------------------------------
+  $('gameSelect').onchange = () => {
+    const game = $('gameSelect').value;
+    cfg.game = game;
+    $('gameBadge').textContent = game;
+
+    // Show/hide submarine-specific UI
+    const isSubmarine = game === 'submarine';
+    $('cornerOverlay').classList.toggle('show', isSubmarine);
+    $('btnRescan').style.display = isSubmarine ? 'inline-block' : 'none';
+
+    // Reset when switching games
+    clearReadCache();
+    send({ type: 'control', action: 'reset' });
+    tick(`switched to ${game} mode`);
+  };
+
+  $('btnRescan').onclick = () => {
+    send({ type: 'control', action: 'rescan' });
+    tick('rescan requested');
+  };
+
+  // --- submarine corner dragging ----------------------------------------------------
+  let dragCorner = null;
+  const corners = [
+    { x: 0.1, y: 0.1 },   // top-left
+    { x: 0.9, y: 0.1 },   // top-right
+    { x: 0.9, y: 0.9 },   // bottom-right
+    { x: 0.1, y: 0.9 }    // bottom-left
+  ];
+
+  function setupCornerDrag() {
+    const overlay = $('cornerOverlay');
+    const video = $('video');
+
+    for (let i = 0; i < 4; i++) {
+      const corner = $(`corner${i}`);
+
+      corner.onmousedown = (e) => {
+        e.preventDefault();
+        dragCorner = i;
+      };
+    }
+
+    overlay.onmousemove = (e) => {
+      if (dragCorner === null) return;
+      const rect = video.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+
+      corners[dragCorner].x = Math.max(0, Math.min(1, x));
+      corners[dragCorner].y = Math.max(0, Math.min(1, y));
+
+      updateCornerPosition(dragCorner);
+
+      // Send updated corners to server
+      send({
+        type: 'control',
+        action: 'set_corners',
+        corners: corners.map(c => [c.x * 640, c.y * 480])  // Convert to pixel coords
+      });
+    };
+
+    overlay.onmouseup = () => {
+      dragCorner = null;
+    };
+
+    overlay.onmouseleave = () => {
+      dragCorner = null;
+    };
+  }
+
+  function updateCornerPosition(i) {
+    const corner = $(`corner${i}`);
+    corner.style.left = (corners[i].x * 100) + '%';
+    corner.style.top = (corners[i].y * 100) + '%';
+  }
+
+  setupCornerDrag();
 
   connect();
   initCamera();

@@ -18,6 +18,7 @@ import numpy as np
 from server.core import config as cfg
 from server.perception import debug as debug_mod
 from server.perception import rectify_aruco, rectify_grid
+from server.perception.change_detector import ChangeDetector
 from server.perception.motion import MotionGate
 from server.perception.types import PerceptionResult
 
@@ -28,11 +29,13 @@ class Pipeline:
     def __init__(self, marks_module):
         self.marks = marks_module
         self.gate = MotionGate(cfg.T_MOTION)
+        self.change_detector: ChangeDetector | None = None  # Submarine mode
         self.hint: list[str] | None = None   # last confirmed board labels
         self.last_k = 0                       # last chosen rotation
         self.last_rectified: np.ndarray | None = None
         self.last_ms = 0.0
         self.t_empty_override: float | None = None  # memory-learned, clamped upstream
+        self.submarine_corners: list[tuple[int, int]] = []  # User-set corners for submarine
 
     def process(self, jpeg: bytes, banner: str = "") -> tuple[PerceptionResult, bytes]:
         t0 = time.perf_counter()
@@ -44,6 +47,10 @@ class Pipeline:
         if frame.shape[1] > cfg.FRAME_WIDTH:
             scale = cfg.FRAME_WIDTH / frame.shape[1]
             frame = cv2.resize(frame, (cfg.FRAME_WIDTH, int(frame.shape[0] * scale)))
+
+        # Submarine mode: use change detection instead of grid detection
+        if cfg.ACTIVE_GAME == "submarine":
+            return self._process_submarine(frame, ts, banner, t0)
 
         motion, diff = self.gate.update(frame)
         if motion:
@@ -107,3 +114,42 @@ class Pipeline:
         rectified = np.ascontiguousarray(np.rot90(rectified, best_k))
         self.last_k = best_k
         return cells, rectified, best_k
+
+    def _process_submarine(self, frame, ts, banner, t0):
+        """Submarine-specific processing: change detection instead of grid."""
+        if self.change_detector is None:
+            from server.games.submarine.config import SETTLE_FRAMES, CHANGE_THRESHOLD
+            self.change_detector = ChangeDetector(SETTLE_FRAMES, CHANGE_THRESHOLD)
+
+        # Use corners if set, otherwise entire frame
+        corners = self.submarine_corners if len(self.submarine_corners) == 4 else None
+        change_info = self.change_detector.check_change(frame, corners)
+
+        result = PerceptionResult(
+            grid_found=False,  # Submarine doesn't use grid
+            corners=corners,
+            reproj_error=None,
+            cells=[],
+            motion=False,
+            ts=ts,
+            change_info=change_info,
+            raw_frame=frame
+        )
+
+        self.last_rectified = frame  # Store for recognition
+        self.last_ms = (time.perf_counter() - t0) * 1000
+
+        status = f"settled {change_info['stable_count']}" if change_info['settled'] else \
+                 f"monitoring {change_info['stable_count']}"
+        dbg = debug_mod.composite(
+            frame, None, None, corners,
+            f"{banner} | submarine | {status} | {self.last_ms:.0f}ms"
+        )
+
+        return result, dbg
+
+    def set_submarine_corners(self, corners: list[tuple[int, int]]):
+        """Set user-defined corner boundaries for submarine mode."""
+        self.submarine_corners = corners
+        if self.change_detector:
+            self.change_detector.reset()  # Reset when corners change

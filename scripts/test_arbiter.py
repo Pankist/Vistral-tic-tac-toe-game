@@ -1,7 +1,7 @@
 """One-shot arbiter round-trip on a synthetic board photo.
 
 Draws an X and an O on a rendered grid, sends it through the real Arbiter
-(needs OPENROUTER_API_KEY in .env), prints the strict-JSON read and the cost
+(needs ANTHROPIC_API_KEY in .env), prints the strict-JSON read and the cost
 metadata. Acceptance check #4.
 
 Run: .venv/bin/python scripts/test_arbiter.py
@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 
 from server.core.arbiter import Arbiter
-from server.core.llm import OpenRouterClient
+from server.core.llm import AnthropicClient
 from server.core.loader import load_prompts_module
 
 
@@ -34,7 +34,7 @@ def synthetic_board() -> np.ndarray:
 
 def main() -> None:
     calls = []
-    arbiter = Arbiter(OpenRouterClient(), load_prompts_module(),
+    arbiter = Arbiter(AnthropicClient(), load_prompts_module(),
                       log=lambda kind, data: calls.append((kind, data)))
     board = ["X", "", "", "", "", "", "", "", ""]
     result = arbiter.read_board(synthetic_board(), board,

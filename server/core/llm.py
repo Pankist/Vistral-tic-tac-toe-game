@@ -1,7 +1,12 @@
-"""OpenRouter client — the only piece of the system that talks to a model.
+"""Anthropic API client — the only piece of the system that talks to a model.
 
 One method, strict-JSON oriented, hard timeout, cost logged by the caller.
 No key -> LLMUnavailable, and every caller has a non-LLM fallback path.
+
+Callers build provider-neutral (OpenAI-style) message lists — system/user
+roles, text parts, data-URL image parts — and this client translates them to
+the Messages API. That keeps prompts and call sites provider-agnostic; a
+provider change is this one file.
 """
 
 import json
@@ -11,16 +16,16 @@ import httpx
 
 from server.core import config as cfg
 
-API_URL = "https://openrouter.ai/api/v1/chat/completions"
+API_URL = "https://api.anthropic.com/v1/messages"
 
 
 class LLMUnavailable(Exception):
     pass
 
 
-class OpenRouterClient:
+class AnthropicClient:
     def __init__(self, api_key: str | None = None, timeout: float | None = None):
-        self.api_key = api_key if api_key is not None else cfg.OPENROUTER_API_KEY
+        self.api_key = api_key if api_key is not None else cfg.ANTHROPIC_API_KEY
         self.timeout = timeout or cfg.LLM_TIMEOUT_S
 
     def chat(self, model: str, messages: list[dict], timeout: float | None = None) -> dict:
@@ -30,13 +35,18 @@ class OpenRouterClient:
         of the provenance tuple, not just the requested string.
         """
         if not self.api_key:
-            raise LLMUnavailable("OPENROUTER_API_KEY not set")
+            raise LLMUnavailable("ANTHROPIC_API_KEY not set")
+        system, converted = _convert(messages)
+        payload = {"model": model, "max_tokens": 1024, "messages": converted}
+        if system:
+            payload["system"] = system
         t0 = time.perf_counter()
         try:
             resp = httpx.post(
                 API_URL,
-                headers={"Authorization": f"Bearer {self.api_key}"},
-                json={"model": model, "messages": messages, "usage": {"include": True}},
+                headers={"x-api-key": self.api_key,
+                         "anthropic-version": "2023-06-01"},
+                json=payload,
                 timeout=timeout or self.timeout,
             )
             resp.raise_for_status()
@@ -44,8 +54,9 @@ class OpenRouterClient:
         except (httpx.HTTPError, json.JSONDecodeError) as e:
             raise LLMUnavailable(str(e)) from e
         try:
-            content = data["choices"][0]["message"]["content"]
-        except (KeyError, IndexError) as e:
+            content = "".join(b["text"] for b in data["content"]
+                              if b.get("type") == "text")
+        except (KeyError, TypeError) as e:
             raise LLMUnavailable(f"malformed response: {e}") from e
         return {
             "content": content,
@@ -53,6 +64,32 @@ class OpenRouterClient:
             "latency_ms": int((time.perf_counter() - t0) * 1000),
             "usage": data.get("usage", {}),
         }
+
+
+def _convert(messages: list[dict]) -> tuple[str, list[dict]]:
+    """OpenAI-style messages -> (system string, Anthropic message list)."""
+    system_parts, out = [], []
+    for m in messages:
+        if m["role"] == "system":
+            system_parts.append(m["content"])
+            continue
+        content = m["content"]
+        if isinstance(content, str):
+            blocks = [{"type": "text", "text": content}]
+        else:
+            blocks = []
+            for part in content:
+                if part["type"] == "text":
+                    blocks.append({"type": "text", "text": part["text"]})
+                elif part["type"] == "image_url":
+                    url = part["image_url"]["url"]     # data:image/jpeg;base64,...
+                    header, _, b64 = url.partition(";base64,")
+                    blocks.append({"type": "image", "source": {
+                        "type": "base64",
+                        "media_type": header.removeprefix("data:"),
+                        "data": b64}})
+        out.append({"role": m["role"], "content": blocks})
+    return "\n".join(system_parts), out
 
 
 def parse_strict_json(text: str) -> dict:

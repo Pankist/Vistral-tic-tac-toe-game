@@ -11,7 +11,7 @@ import base64
 import cv2
 
 from server.core import config as cfg
-from server.core.llm import LLMUnavailable, OpenRouterClient, parse_strict_json
+from server.core.llm import LLMUnavailable, AnthropicClient, parse_strict_json
 
 
 class ArbiterUnavailable(Exception):
@@ -19,7 +19,7 @@ class ArbiterUnavailable(Exception):
 
 
 class Arbiter:
-    def __init__(self, client: OpenRouterClient, prompts, log=None):
+    def __init__(self, client: AnthropicClient, prompts, log=None):
         self.client = client
         self.prompts = prompts
         self.log = log or (lambda *_: None)

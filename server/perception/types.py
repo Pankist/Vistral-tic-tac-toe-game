@@ -21,6 +21,9 @@ class PerceptionResult:
     ts: float
     diff: float = 0.0               # motion-gate diff value, for the debug banner
     method: str = ""                # "lines" | "aruco" | ""
+    # Submarine-specific fields
+    change_info: dict | None = None # Change detection result for submarine mode
+    raw_frame: object = None        # Raw frame for submarine vision processing
 
     def labels(self) -> tuple[str, ...]:
         """Symbolic hypothesis: identity is labels, not pixels or confidence."""

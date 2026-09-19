@@ -19,8 +19,9 @@ from server.core import fsm as fsm_mod
 from server.core.announcer import Announcer
 from server.core.arbiter import Arbiter, ArbiterUnavailable
 from server.core.fsm import (Announce, ArbiterCheck, ControlEvent, EngineTurn,
-                             FSM, GameEnded, LogEvent, Params, Session)
-from server.core.llm import OpenRouterClient
+                             FSM, GameEnded, LogEvent, Params, RecognizePuzzle,
+                             Session, SolvePuzzle)
+from server.core.llm import AnthropicClient
 from server.core.loader import (load_engine, load_game, load_marks_module,
                                 load_phrases, load_prompts_module)
 from server.core.store import Store
@@ -36,7 +37,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET"])
 _merged = cfg.merged()
 print(f"[boot] config {cfg.config_hash()}: "
       + ", ".join(f"{k}={v}" for k, v in sorted(_merged.items())
-                  if k not in ("OPENROUTER_API_KEY",)))
+                  if k not in ("ANTHROPIC_API_KEY",)))
 
 _last_fsm_state = "IDLE"    # for /health
 
@@ -75,7 +76,7 @@ class SessionRunner:
         gcfg = importlib.import_module(f"server.games.{cfg.ACTIVE_GAME}.config")
         self.gcfg = gcfg
         self.store = Store(self.game.name)
-        client = OpenRouterClient()
+        client = AnthropicClient()
         self.engine = load_engine(self.game, client, log=self.store.log)
         self.announcer = Announcer(load_phrases(), cfg.ANNOUNCER, client,
                                    log=self.store.log)
@@ -118,8 +119,21 @@ class SessionRunner:
         if action == "simulate_mark":
             await self._simulate(msg)
             return
+
+        # Handle submarine-specific controls
+        if action == "set_corners":
+            corners = msg.get("corners", [])
+            if len(corners) == 4:
+                # Convert from client format to tuples
+                self.pipeline.set_submarine_corners(
+                    [(int(c[0]), int(c[1])) for c in corners]
+                )
+
         effects = self.fsm.step(self.session, ControlEvent(
-            action=action, cell=msg.get("cell"), mark=msg.get("mark")))
+            action=action,
+            cell=msg.get("cell"),
+            mark=msg.get("mark"),
+            payload=msg.get("corners") if action == "set_corners" else None))
         if action in ("start", "reset"):
             self.pipeline.hint = None
             self.pipeline.last_k = 0
@@ -171,6 +185,10 @@ class SessionRunner:
                 await self._engine_turn()
             elif isinstance(eff, ArbiterCheck):
                 asyncio.get_running_loop().create_task(self._arbiter_turn(eff))
+            elif isinstance(eff, RecognizePuzzle):
+                asyncio.get_running_loop().create_task(self._recognize_puzzle(eff))
+            elif isinstance(eff, SolvePuzzle):
+                asyncio.get_running_loop().create_task(self._solve_puzzle(eff))
             elif isinstance(eff, GameEnded):
                 await self._game_over(eff)
             elif isinstance(eff, LogEvent):
@@ -214,6 +232,46 @@ class SessionRunner:
         await self._run_effects(self.fsm.step(self.session, event))
         await self._send_state()
 
+    async def _recognize_puzzle(self, eff: RecognizePuzzle) -> None:
+        """Submarine: recognize puzzle from image using vision."""
+        if cfg.ACTIVE_GAME != "submarine":
+            return
+
+        from server.games.submarine.engine import SubmarineEngine
+        engine = SubmarineEngine(log=self.store.log)
+
+        rect = self.pipeline.last_rectified or eff.image
+        try:
+            if rect is None:
+                raise Exception("no image available")
+            result = await asyncio.to_thread(engine.recognize_puzzle, rect)
+            event = ControlEvent(action="recognize_result", payload=result)
+        except Exception as e:
+            self.store.log("recognition_failed", {"error": str(e)})
+            event = ControlEvent(action="recognize_result",
+                                payload={"has_puzzle": False})
+        await self._run_effects(self.fsm.step(self.session, event))
+        await self._send_state()
+
+    async def _solve_puzzle(self, eff: SolvePuzzle) -> None:
+        """Submarine: solve the recognized puzzle."""
+        if cfg.ACTIVE_GAME != "submarine":
+            return
+
+        from server.games.submarine.engine import SubmarineEngine
+        engine = SubmarineEngine(log=self.store.log)
+
+        try:
+            solution = await asyncio.to_thread(
+                engine.solve_puzzle, eff.puzzle_text, eff.options)
+            event = ControlEvent(action="solve_result", payload=solution)
+        except Exception as e:
+            self.store.log("solving_failed", {"error": str(e)})
+            event = ControlEvent(action="solve_result",
+                                payload={"answer": "Error", "reasoning": str(e)})
+        await self._run_effects(self.fsm.step(self.session, event))
+        await self._send_state()
+
     async def _game_over(self, eff: GameEnded) -> None:
         s = self.session
         result_text = {"human": "You win", "agent": "I win",
@@ -244,6 +302,8 @@ class SessionRunner:
         turn = ("human" if s.state in ("HUMAN_TURN", "CONFIRMING")
                 else "agent" if s.state in ("AGENT_TURN", "AWAIT_DRAW")
                 else "-")
+
+        # Base payload
         payload = {
             "type": "state", "fsm": s.state, "board": s.board, "turn": turn,
             "confidence": s.last_conf, "message": self.message,
@@ -267,6 +327,17 @@ class SessionRunner:
                 "engine": self.engine.name,
             },
         }
+
+        # Add submarine-specific fields
+        if cfg.ACTIVE_GAME == "submarine":
+            payload["submarine"] = {
+                "puzzle_text": s.puzzle_text,
+                "puzzle_options": s.puzzle_options,
+                "answer": s.answer,
+                "settle_count": s.settle_count,
+                "change_info": p.change_info if p and hasattr(p, 'change_info') else None,
+            }
+
         await self.ws.send_text(json.dumps(payload))
 
 
