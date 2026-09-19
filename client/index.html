@@ -83,6 +83,9 @@
                padding:16px; min-height:0; position:relative; }
   #readGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;
               width:min(348px, 100%); }
+  #puzzleText { display:none; width:100%; padding:24px; font-size:16px; line-height:1.6;
+                color:var(--text); overflow-y:auto; }
+  #puzzleText.show { display:block; }
   .rcell { aspect-ratio:1/1.05; background:var(--cellbg); border:1px solid var(--line);
            border-radius:8px; display:flex; flex-direction:column; align-items:center;
            justify-content:center; gap:4px; }
@@ -109,6 +112,9 @@
   .boardwrap { display:flex; justify-content:center; padding:18px; }
   #board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px;
            width:min(264px,100%); }
+  #answerText { display:none; width:100%; padding:24px; font-size:18px; line-height:1.6;
+                font-weight:500; color:var(--teal); }
+  #answerText.show { display:block; }
   .bcell { aspect-ratio:1; background:var(--cellbg); border:1px solid var(--line);
            border-radius:8px; display:flex; align-items:center; justify-content:center; }
   .bcell svg { width:45%; height:45%; }
@@ -184,10 +190,10 @@
       <video id="video" autoplay playsinline muted></video>
       <canvas id="overlay"></canvas>
       <div id="cornerOverlay">
-        <div class="corner" id="corner0" style="top:10%; left:10%;"></div>
-        <div class="corner" id="corner1" style="top:10%; right:10%;"></div>
-        <div class="corner" id="corner2" style="bottom:10%; right:10%;"></div>
-        <div class="corner" id="corner3" style="bottom:10%; left:10%;"></div>
+        <div class="corner" id="corner0" style="top:15%; left:15%;"></div>
+        <div class="corner" id="corner1" style="top:15%; right:15%;"></div>
+        <div class="corner" id="corner2" style="bottom:15%; right:15%;"></div>
+        <div class="corner" id="corner3" style="bottom:15%; left:15%;"></div>
       </div>
     </div>
     <div class="pstrip">
@@ -212,6 +218,7 @@
     </div>
     <div class="agentbody">
       <div id="readGrid"></div>
+      <div id="puzzleText"></div>
       <img id="debugImg" alt="debug composite">
     </div>
     <div class="pstrip">
@@ -228,6 +235,7 @@
       <div class="boardwrap">
         <div style="position:relative; width:min(264px,100%);">
           <div id="board"></div>
+          <div id="answerText"></div>
           <svg id="winLine" viewBox="0 0 100 100" preserveAspectRatio="none"
                style="position:absolute; inset:0; width:100%; height:100%;
                       pointer-events:none; display:none;">
@@ -411,6 +419,19 @@
     if (s.fsm === 'IDLE') { lastCells = []; lastCorners = null; }
     renderReadGrid(s, lastCells);
     renderBoard(s);
+
+    // Update submarine UI if submarine data present
+    if (s.submarine) {
+      if (s.submarine.puzzle_text) {
+        $('puzzleText').textContent = s.submarine.puzzle_text;
+        if (s.submarine.puzzle_options && s.submarine.puzzle_options.length) {
+          $('puzzleText').textContent += '\n\nOptions: ' + s.submarine.puzzle_options.join(', ');
+        }
+      }
+      if (s.submarine.answer) {
+        $('answerText').textContent = 'Answer: ' + s.submarine.answer;
+      }
+    }
     drawOverlay(lastCorners);
 
     const mm = s.fsm === 'MISMATCH';
@@ -498,10 +519,39 @@
     ctx.clearRect(0, 0, ov.width, ov.height);
     if (!corners) return;
     const sc = box.width / 640;                       // server frame is 640 wide
-    ctx.strokeStyle = '#35C9A3'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]);
-    ctx.beginPath();
-    corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
-    ctx.closePath(); ctx.stroke();
+
+    // For submarine mode with corner overlay, draw selection boundary + dark mask
+    if ($('cornerOverlay').classList.contains('show')) {
+      // Darken everything outside selection
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillRect(0, 0, ov.width, ov.height);
+
+      // Cut out selection area (composite mode)
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw red dotted boundary
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = '#E2574C'; // coral red
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
+      ctx.closePath();
+      ctx.stroke();
+    } else {
+      // Tic-tac-toe mode: teal dashed grid outline
+      ctx.strokeStyle = '#35C9A3';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      corners.forEach(([x, y], i) => i ? ctx.lineTo(x * sc, y * sc) : ctx.moveTo(x * sc, y * sc));
+      ctx.closePath();
+      ctx.stroke();
+    }
   }
 
   // --- speech / voice panel -------------------------------------------------------
@@ -600,6 +650,17 @@
     $('cornerOverlay').classList.toggle('show', isSubmarine);
     $('btnRescan').style.display = isSubmarine ? 'inline-block' : 'none';
 
+    // Toggle grid vs text display
+    $('readGrid').style.display = isSubmarine ? 'none' : 'grid';
+    $('puzzleText').classList.toggle('show', isSubmarine);
+    $('board').style.display = isSubmarine ? 'none' : 'grid';
+    $('answerText').classList.toggle('show', isSubmarine);
+
+    if (isSubmarine) {
+      $('puzzleText').textContent = 'Waiting for puzzle...';
+      $('answerText').textContent = '';
+    }
+
     // Reset when switching games
     clearReadCache();
     send({ type: 'control', action: 'reset' });
@@ -614,10 +675,10 @@
   // --- submarine corner dragging ----------------------------------------------------
   let dragCorner = null;
   const corners = [
-    { x: 0.1, y: 0.1 },   // top-left
-    { x: 0.9, y: 0.1 },   // top-right
-    { x: 0.9, y: 0.9 },   // bottom-right
-    { x: 0.1, y: 0.9 }    // bottom-left
+    { x: 0.15, y: 0.15 },   // top-left
+    { x: 0.85, y: 0.15 },   // top-right
+    { x: 0.85, y: 0.85 },   // bottom-right
+    { x: 0.15, y: 0.85 }    // bottom-left
   ];
 
   function setupCornerDrag() {
