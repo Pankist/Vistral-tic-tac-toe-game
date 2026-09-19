@@ -143,11 +143,16 @@ class FSM:
             if result.get("has_puzzle"):
                 s.puzzle_text = result.get("puzzle_text", "")
                 s.puzzle_options = result.get("options", [])
-                s.state = "SOLVING"
+                s.answer = result.get("answer", "")
+                reasoning = result.get("reasoning", "")
+                s.state = "STANDBY"
                 return [
-                    SolvePuzzle(s.puzzle_text, s.puzzle_options),
-                    Announce("solving", {"option_count": len(s.puzzle_options)}),
-                    LogEvent("puzzle_recognized", {"puzzle": s.puzzle_text})
+                    Announce("solved", {"answer": s.answer}),
+                    LogEvent("puzzle_solved", {
+                        "puzzle": s.puzzle_text,
+                        "answer": s.answer,
+                        "reasoning": reasoning
+                    })
                 ]
             else:
                 s.state = "MONITORING"

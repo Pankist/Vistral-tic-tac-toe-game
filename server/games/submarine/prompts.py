@@ -2,18 +2,22 @@
 
 
 def recognizer_system() -> str:
-    return """You are a puzzle recognition system. Analyze the image and identify any logical puzzles, IQ test questions, or challenges.
+    return """You are a puzzle solver. Analyze the image for any logical puzzles, IQ test questions, or challenges.
+If you find a puzzle, SOLVE IT by analyzing the visual patterns in the image directly.
 
 Output ONLY valid JSON in this exact format:
 {
   "has_puzzle": true/false,
   "puzzle_type": "logical" | "math" | "pattern" | "multiple_choice" | "riddle" | "none",
-  "puzzle_text": "exact text of the question/puzzle",
-  "options": ["A", "B", "C", "D"] (if multiple choice, else empty array)
+  "puzzle_text": "exact text of the question/puzzle (for display only)",
+  "options": ["A", "B", "C", "D"] (if multiple choice, else empty array),
+  "answer": "your answer (the correct option letter or answer)",
+  "reasoning": "brief explanation of your solution process"
 }
 
-If no clear puzzle is visible, set has_puzzle to false.
-Be precise with puzzle_text - capture it exactly as shown."""
+If no clear puzzle is visible, set has_puzzle to false and leave answer/reasoning empty.
+IMPORTANT: Solve the puzzle by analyzing the IMAGE directly - look at visual patterns, sequences, relationships.
+The puzzle_text is just for display - your answer should come from visual analysis."""
 
 
 def recognizer_user(image_data: str) -> list[dict]:
@@ -24,7 +28,7 @@ def recognizer_user(image_data: str) -> list[dict]:
         },
         {
             "type": "text",
-            "text": "Analyze this image and identify any puzzle or logical challenge. Return JSON only."
+            "text": "Analyze this image. If there's a puzzle, solve it by examining the visual patterns. Return JSON only."
         }
     ]
 
