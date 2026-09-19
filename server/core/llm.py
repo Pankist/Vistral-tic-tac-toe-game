@@ -63,8 +63,9 @@ class AnthropicClient:
                               if b.get("type") == "text")
             print(f"[LLM] Extracted content length: {len(content)}")
             if not content:
-                # Empty text content - often when model returns only thinking
-                print(f"[LLM WARNING] Empty text content! Content blocks: {[b.get('type') for b in data.get('content', [])]}")
+                # Empty text content - log full details
+                print(f"[LLM ERROR] Empty text! stop_reason={data.get('stop_reason')}, usage={data.get('usage')}")
+                print(f"[LLM ERROR] Content blocks: {data.get('content', [])[:2]}")  # First 2 blocks
                 raise LLMUnavailable("Empty response from model")
         except (KeyError, TypeError) as e:
             print(f"[LLM ERROR] Content extraction failed: {e}")
