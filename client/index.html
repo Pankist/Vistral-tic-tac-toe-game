@@ -438,9 +438,16 @@
         if (s.submarine.puzzle_options && s.submarine.puzzle_options.length) {
           $('puzzleText').textContent += '\n\nOptions: ' + s.submarine.puzzle_options.join(', ');
         }
+        if (s.submarine.answer) {
+          $('answerText').textContent = 'Answer: ' + s.submarine.answer + ' ✓';
+        }
+      } else {
+        // No puzzle detected - clear old answer
+        $('answerText').textContent = '';
       }
-      if (s.submarine.answer) {
-        $('answerText').textContent = 'Answer: ' + s.submarine.answer;
+      // Show progress when recognizing
+      if (s.fsm === 'RECOGNIZING') {
+        $('puzzleText').textContent = '⏳ Analyzing...';
       }
     }
 
