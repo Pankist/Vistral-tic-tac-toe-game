@@ -276,7 +276,7 @@ class SessionRunner:
 
     async def _recognize_puzzle(self, eff: RecognizePuzzle) -> None:
         """Submarine: recognize puzzle from image using vision."""
-        if cfg.ACTIVE_GAME != "submarine":
+        if self.game.name != "submarine":
             return
 
         from server.games.submarine.engine import SubmarineEngine
@@ -297,7 +297,7 @@ class SessionRunner:
 
     async def _solve_puzzle(self, eff: SolvePuzzle) -> None:
         """Submarine: solve the recognized puzzle."""
-        if cfg.ACTIVE_GAME != "submarine":
+        if self.game.name != "submarine":
             return
 
         from server.games.submarine.engine import SubmarineEngine
