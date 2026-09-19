@@ -40,9 +40,6 @@ class AnthropicClient:
         payload = {"model": model, "max_tokens": 1024, "messages": converted}
         if system:
             payload["system"] = system
-        # Disable extended thinking for vision models to prevent empty text responses
-        if "fable" in model.lower():
-            payload["thinking"] = {"type": "disabled"}
         t0 = time.perf_counter()
         try:
             resp = httpx.post(
@@ -53,6 +50,8 @@ class AnthropicClient:
                 timeout=timeout or self.timeout,
             )
             print(f"[LLM] Response status: {resp.status_code}")
+            if resp.status_code >= 400:
+                print(f"[LLM ERROR] Response body: {resp.text[:500]}")
             resp.raise_for_status()
             data = resp.json()
             print(f"[LLM] Response data keys: {data.keys()}")
@@ -64,7 +63,9 @@ class AnthropicClient:
                               if b.get("type") == "text")
             print(f"[LLM] Extracted content length: {len(content)}")
             if not content:
-                print(f"[LLM WARNING] Empty content! data['content']: {data.get('content')}")
+                # Empty text content - often when model returns only thinking
+                print(f"[LLM WARNING] Empty text content! Content blocks: {[b.get('type') for b in data.get('content', [])]}")
+                raise LLMUnavailable("Empty response from model")
         except (KeyError, TypeError) as e:
             print(f"[LLM ERROR] Content extraction failed: {e}")
             raise LLMUnavailable(f"malformed response: {e}") from e
