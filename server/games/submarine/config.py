@@ -15,8 +15,8 @@ MODEL_RECOGNIZER = "claude-fable-5-1"
 # Model for solving puzzles
 MODEL_SOLVER = "claude-sonnet-5"
 
-# Timeout for vision calls
-VISION_TIMEOUT_S = 10.0
+# Timeout for vision calls (vision models are slow)
+VISION_TIMEOUT_S = 30.0
 
 # Arbiter threshold (not used in submarine, but required by config merge)
 T_ARBITER = 0.75
