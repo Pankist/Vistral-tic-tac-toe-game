@@ -49,14 +49,21 @@ class AnthropicClient:
                 json=payload,
                 timeout=timeout or self.timeout,
             )
+            print(f"[LLM] Response status: {resp.status_code}")
             resp.raise_for_status()
             data = resp.json()
+            print(f"[LLM] Response data keys: {data.keys()}")
         except (httpx.HTTPError, json.JSONDecodeError) as e:
+            print(f"[LLM ERROR] HTTP/JSON error: {e}")
             raise LLMUnavailable(str(e)) from e
         try:
             content = "".join(b["text"] for b in data["content"]
                               if b.get("type") == "text")
+            print(f"[LLM] Extracted content length: {len(content)}")
+            if not content:
+                print(f"[LLM WARNING] Empty content! data['content']: {data.get('content')}")
         except (KeyError, TypeError) as e:
+            print(f"[LLM ERROR] Content extraction failed: {e}")
             raise LLMUnavailable(f"malformed response: {e}") from e
         return {
             "content": content,
