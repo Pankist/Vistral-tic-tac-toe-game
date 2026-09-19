@@ -140,21 +140,24 @@ class FSM:
 
         if e.action == "recognize_result":
             result = e.payload or {}
-            if result.get("has_puzzle"):
-                s.puzzle_text = result.get("question", "")
+            status = result.get("status", "not_recognized")
+
+            if status in ("recognized", "solved"):
+                s.puzzle_text = result.get("puzzle_description", "")
                 s.answer = result.get("answer", "")
                 s.state = "STANDBY"
                 return [
                     Announce("solved", {"answer": s.answer}),
                     LogEvent("puzzle_solved", {
-                        "question": s.puzzle_text,
+                        "status": status,
+                        "puzzle_description": s.puzzle_text,
                         "answer": s.answer
                     })
                 ]
             else:
                 s.state = "MONITORING"
                 s.settle_count = 0
-                return [Announce("no_puzzle"), LogEvent("no_puzzle_found", {})]
+                return [Announce("no_puzzle"), LogEvent("no_puzzle_found", {"status": status})]
 
         if e.action == "solve_result":
             solution = e.payload or {}

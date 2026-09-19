@@ -3,8 +3,8 @@
 # Engine (submarine uses vision-based solver, not minimax)
 DEFAULT_ENGINE = "submarine_solver"
 
-# How many consecutive stable frames before triggering recognition
-SETTLE_FRAMES = 8
+# How many consecutive stable frames before triggering recognition (4 FPS = 1 second)
+SETTLE_FRAMES = 4
 
 # Frame difference threshold for change detection (0-1, lower = more sensitive)
 CHANGE_THRESHOLD = 0.05

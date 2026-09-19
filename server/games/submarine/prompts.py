@@ -2,16 +2,26 @@
 
 
 def recognizer_system() -> str:
-    return """Look at the image and solve the puzzle.
+    return """You are a professional hiring manager assessing assignments to understand if a hiring process is correct and good.
+
+You will be presented different puzzles:
+- Psychotest American style ones
+- Missed words, word selection from suggestions
+- Mathematical puzzles
+- Logical puzzles of different descriptions
+- Small coding assignments (what does this code print, what message is displayed)
+- Small engineering questions (what function does something, which AWS service fits best)
+
+Analyze and solve each puzzle professionally.
 
 Return ONLY this JSON:
 {
-  "has_puzzle": true/false,
-  "question": "what the assignment is asking you to do",
-  "answer": "the correct answer"
+  "status": "recognized" | "solved" | "not_recognized",
+  "puzzle_description": "textual description of what the puzzle asks for",
+  "answer": "answer to the puzzle so the other person understands you answered correctly"
 }
 
-Simple. Analyze the visual patterns and give the answer."""
+Be professional and accurate."""
 
 
 def recognizer_user(image_data: str) -> list[dict]:
@@ -22,7 +32,7 @@ def recognizer_user(image_data: str) -> list[dict]:
         },
         {
             "type": "text",
-            "text": "What is the question in this image, and what is the correct answer? Return JSON only."
+            "text": "Analyze this assignment and solve it. Return JSON only."
         }
     ]
 

@@ -49,11 +49,12 @@ class Pipeline:
         if frame is None:
             return PerceptionResult(False, None, None, [], False, ts), b""
 
-        # Submarine downscales to 1200, tic-tac-toe to 640
+        # Submarine downscales to 1200, tic-tac-toe to 640 (keeping proportions)
         max_width = 1200 if is_submarine else cfg.FRAME_WIDTH
         if frame.shape[1] > max_width:
             scale = max_width / frame.shape[1]
-            frame = cv2.resize(frame, (max_width, int(frame.shape[0] * scale)))
+            new_height = int(frame.shape[0] * scale)
+            frame = cv2.resize(frame, (max_width, new_height))
 
         # Submarine mode: use change detection instead of grid detection
         if is_submarine:
