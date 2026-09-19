@@ -47,12 +47,17 @@ class SubmarineEngine:
             return recognition
 
         except (LLMUnavailable, ValueError) as e:
-            self.log("error", {"type": "recognition_failed", "error": str(e)})
+            error_msg = str(e)
+            self.log("error", {
+                "type": "recognition_failed",
+                "error": error_msg,
+                "model": MODEL_RECOGNIZER
+            })
+            print(f"[SUBMARINE ERROR] Recognition failed: {error_msg}")  # Console logging
             return {
-                "has_puzzle": False,
-                "puzzle_type": "none",
-                "puzzle_text": "",
-                "options": []
+                "status": "not_recognized",
+                "puzzle_description": f"API Error: {error_msg[:100]}",
+                "answer": "Unable to process - check API credits"
             }
 
     def solve_puzzle(self, puzzle_text: str, options: list[str] = None) -> dict:
