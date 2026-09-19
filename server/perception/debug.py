@@ -19,7 +19,11 @@ def composite(
     jpeg_quality: int = 70,
 ) -> bytes:
     view_h = 330
-    raw = cv2.cvtColor(raw_gray, cv2.COLOR_GRAY2BGR)
+    # Handle both grayscale and color frames
+    if len(raw_gray.shape) == 2:
+        raw = cv2.cvtColor(raw_gray, cv2.COLOR_GRAY2BGR)
+    else:
+        raw = raw_gray.copy()
     scale = view_h / raw.shape[0]
     raw = cv2.resize(raw, (int(raw.shape[1] * scale), view_h))
     if corners:
@@ -27,7 +31,10 @@ def composite(
         cv2.polylines(raw, [pts], True, (163, 201, 53), 2)  # teal, BGR
 
     if rectified is not None:
-        rect = cv2.cvtColor(rectified, cv2.COLOR_GRAY2BGR)
+        if len(rectified.shape) == 2:
+            rect = cv2.cvtColor(rectified, cv2.COLOR_GRAY2BGR)
+        else:
+            rect = rectified.copy()
     else:
         rect = np.full((330, 330, 3), 30, np.uint8)
         cv2.putText(rect, "no grid", (110, 170), FONT, 0.7, (76, 87, 226), 2)

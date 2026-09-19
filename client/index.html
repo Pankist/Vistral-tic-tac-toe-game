@@ -318,6 +318,13 @@
         speaking = c.voice !== 'off';
         $('voiceToggle').textContent = speaking ? 'voice on' : 'voice off';
         tick(`config fps ${c.fps} engine ${c.engine} voice ${c.voice || 'on'}`);
+
+        // Sync game mode: if dropdown differs from server, send switch message
+        const selectedGame = $('gameSelect').value;
+        if (selectedGame !== c.game) {
+          tick(`syncing game mode to ${selectedGame}`);
+          send({ type: 'control', action: 'switch_game', game: selectedGame });
+        }
       }).catch(() => {});
     };
     ws.onclose = () => {

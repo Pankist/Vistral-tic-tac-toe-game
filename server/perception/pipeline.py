@@ -41,16 +41,22 @@ class Pipeline:
     def process(self, jpeg: bytes, banner: str = "") -> tuple[PerceptionResult, bytes]:
         t0 = time.perf_counter()
         arr = np.frombuffer(jpeg, np.uint8)
-        frame = cv2.imdecode(arr, cv2.IMREAD_GRAYSCALE)
+
+        # Submarine uses color, tic-tac-toe uses grayscale
+        is_submarine = self.game_mode == "submarine"
+        frame = cv2.imdecode(arr, cv2.IMREAD_COLOR if is_submarine else cv2.IMREAD_GRAYSCALE)
         ts = time.time()
         if frame is None:
             return PerceptionResult(False, None, None, [], False, ts), b""
-        if frame.shape[1] > cfg.FRAME_WIDTH:
-            scale = cfg.FRAME_WIDTH / frame.shape[1]
-            frame = cv2.resize(frame, (cfg.FRAME_WIDTH, int(frame.shape[0] * scale)))
+
+        # Submarine downscales to 1200, tic-tac-toe to 640
+        max_width = 1200 if is_submarine else cfg.FRAME_WIDTH
+        if frame.shape[1] > max_width:
+            scale = max_width / frame.shape[1]
+            frame = cv2.resize(frame, (max_width, int(frame.shape[0] * scale)))
 
         # Submarine mode: use change detection instead of grid detection
-        if self.game_mode == "submarine":
+        if is_submarine:
             return self._process_submarine(frame, ts, banner, t0)
 
         motion, diff = self.gate.update(frame)
