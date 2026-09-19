@@ -85,7 +85,7 @@ class SessionRunner:
                                          n_calib=cfg.N_CALIB,
                                          t_arbiter=gcfg.T_ARBITER))
         self.session = Session()
-        self.pipeline = Pipeline(load_marks_module())
+        self.pipeline = Pipeline(load_marks_module(), game_mode=cfg.ACTIVE_GAME)
         self.pipeline.t_empty_override = self.store.learned_t_empty()
         self.last_perception: PerceptionResult | None = None
         self._frame_times: list[float] = []
@@ -164,10 +164,10 @@ class SessionRunner:
         # Reload pipeline with new marks module
         marks = load_marks_module(game_name)
         if marks:
-            self.pipeline = Pipeline(marks)
+            self.pipeline = Pipeline(marks, game_mode=game_name)
         else:
             # Submarine doesn't have marks
-            self.pipeline = Pipeline(None)
+            self.pipeline = Pipeline(None, game_mode=game_name)
 
         # Recreate FSM with new game
         self.fsm = FSM(self.game, Params(k_stable=cfg.K_STABLE,

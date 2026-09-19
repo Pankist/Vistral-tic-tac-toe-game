@@ -26,8 +26,9 @@ _ROT_IDX = [np.rot90(np.arange(9).reshape(3, 3), k).flatten().tolist() for k in 
 
 
 class Pipeline:
-    def __init__(self, marks_module):
+    def __init__(self, marks_module, game_mode: str = "tic_tac_toe"):
         self.marks = marks_module
+        self.game_mode = game_mode  # Track which game we're processing for
         self.gate = MotionGate(cfg.T_MOTION)
         self.change_detector: ChangeDetector | None = None  # Submarine mode
         self.hint: list[str] | None = None   # last confirmed board labels
@@ -49,7 +50,7 @@ class Pipeline:
             frame = cv2.resize(frame, (cfg.FRAME_WIDTH, int(frame.shape[0] * scale)))
 
         # Submarine mode: use change detection instead of grid detection
-        if cfg.ACTIVE_GAME == "submarine":
+        if self.game_mode == "submarine":
             return self._process_submarine(frame, ts, banner, t0)
 
         motion, diff = self.gate.update(frame)
