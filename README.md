@@ -1,10 +1,14 @@
 # visual-gamer-agent
 
-An AI agent that plays board games against a human over live video. The human draws on paper; the agent watches through a camera, detects new marks unprompted, decides its move, announces it out loud, and verifies the human actually drew it before play continues. Ink on the page is the source of truth — a mark the agent hasn't seen doesn't exist.
+An AI agent that plays board games against a human over live video, and solves logical puzzles by watching a camera. The human draws on paper; the agent watches through a camera, detects new marks unprompted, decides its move, announces it out loud, and verifies the human actually drew it before play continues. Ink on the page is the source of truth — a mark the agent hasn't seen doesn't exist.
 
-First game: tic-tac-toe (`games/tic_tac_toe/`). The core is game-agnostic — perception handles geometry, the FSM owns the session, and engines plug in behind a protocol. `games/chess/` is empty on purpose: that's where the next game goes.
+**Two game modes:**
 
-**The agent is the loop, not the LLM.** Continuous perception is classical CV (OpenCV, ~free, ≤40ms/frame). A vision model is consulted only when confidence drops; move selection is minimax by default, with a swappable LLM engine (one config line) guarded by the same legality validation. A clean game costs $0.00 in inference.
+1. **Tic-tac-toe** (`games/tic_tac_toe/`) - Classic turn-based gameplay. The agent is the loop, not the LLM. Continuous perception is classical CV (OpenCV, ~free, ≤40ms/frame). A vision model is consulted only when confidence drops; move selection is minimax by default. A clean game costs $0.00 in inference.
+
+2. **Submarine** (`games/submarine/`) - Vision-based logical puzzle solver. Point the camera at IQ tests, logic puzzles, or challenges. The agent recognizes the question using Claude Fable vision, solves it with Claude Sonnet, and displays the answer with reasoning. Manual corner selection lets you frame any puzzle area.
+
+The core is game-agnostic — perception handles geometry, the FSM owns the session, and engines plug in behind a protocol.
 
 ## Quick start (under 10 minutes)
 
@@ -13,16 +17,24 @@ Prereqs: Python 3.12, a webcam (laptop, USB, or phone-as-webcam), a sheet of pap
 ```bash
 git clone https://github.com/Pankist/Vistral-tic-tac-toe-game.git && cd Vistral-tic-tac-toe-game
 make setup                        # venv + pinned deps
-cp .env.example .env              # add OPENROUTER_API_KEY (optional — see below)
-make print-board                  # boards.pdf: optional tidy printable grid
+cp .env.example .env              # add ANTHROPIC_API_KEY (required for submarine, optional for tic-tac-toe)
+make print-board                  # boards.pdf: optional tidy printable grid  
 make dev                          # server + client on http://localhost:8000
 ```
+
+### Tic-tac-toe mode
 
 Open `http://localhost:8000`, allow camera access, draw a bold `#` grid on the page (thick strokes, no border needed), point the camera down at it, press **Start**.
 
 No API key? Everything runs except the low-confidence arbiter and the optional LLM engine — the game plays fine without them.
 
 Dry run without a camera: open `http://localhost:8000?dev=1` and use the simulate-mark grid to play a full game against the engine.
+
+### Submarine mode
+
+Open `http://localhost:8000`, select **Submarine** from the game dropdown, allow camera access. Drag the 4 red corner markers to frame your puzzle area (IQ test book, worksheet, screen). Point camera at a logical question or puzzle, press **Start**. The system monitors for changes; when the image settles, it recognizes and solves the puzzle automatically. Press **Rescan** to solve another.
+
+Requires `ANTHROPIC_API_KEY` in `.env` for vision recognition and solving.
 
 ## How to play
 
@@ -36,29 +48,46 @@ Tips: even, non-glare lighting; keep the page flat and the camera fixed; draw th
 
 ## Configuration
 
-Behavior lives in two git-tracked config files; `.env` holds only secrets and deployment facts (`OPENROUTER_API_KEY`, port, optional `S3_BUCKET`). Change anything by editing the file — `make dev` hot-reloads it in ~2s.
+Behavior lives in git-tracked config files; `.env` holds only secrets and deployment facts (`ANTHROPIC_API_KEY`, port, optional `S3_BUCKET`). Change anything by editing the file — `make dev` hot-reloads it in ~2s.
 
 | Where | Keys | Meaning |
 |---|---|---|
-| `server/core/config.py` | `ACTIVE_GAME`, `FPS`, `T_MOTION`, `K_STABLE`, `RECTIFY`, `ANNOUNCER`, `VOICE`, model names | System mechanics: which game is mounted, how frames are read and gated, rectification mode, how the agent speaks (`VOICE="off"` boots the client silent; the UI can toggle per session) |
-| `server/games/tic_tac_toe/config.py` | `DEFAULT_ENGINE`, `STRENGTH`, `T_empty`, classification cutoffs, `T_arbiter` | Game settings: engine choice, opponent strength, perception thresholds for this game |
+| `server/core/config.py` | `ACTIVE_GAME`, `AVAILABLE_GAMES`, `FPS`, `T_MOTION`, `K_STABLE`, `RECTIFY`, `ANNOUNCER`, `VOICE`, model names | System mechanics: which game is mounted, available games list, how frames are read and gated, rectification mode, how the agent speaks (`VOICE="off"` boots the client silent; the UI can toggle per session) |
+| `server/games/tic_tac_toe/config.py` | `DEFAULT_ENGINE`, `STRENGTH`, `T_empty`, classification cutoffs, `T_arbiter` | Tic-tac-toe settings: engine choice, opponent strength, perception thresholds |
+| `server/games/submarine/config.py` | `SETTLE_FRAMES`, `CHANGE_THRESHOLD`, `MODEL_RECOGNIZER`, `MODEL_SOLVER` | Submarine settings: change detection sensitivity, vision models for recognition and solving |
 
-## Architecture in one paragraph
+## Architecture
 
-Browser client (camera capture, speech, debug view) streams JPEG frames at ~4 FPS over WebSocket to a single FastAPI process. Perception (motion gate → rectify → per-cell read) produces a `PerceptionResult`; the FSM — a pure function over states `CALIBRATING → HUMAN_TURN → CONFIRMING → AGENT_TURN → AWAIT_DRAW → GAME_OVER`, plus `MISMATCH` — turns stable readings into game events; the configured engine picks the reply; the announcer speaks it. Every transition, perception summary, and model call lands in `runs/events.jsonl`; per-setup calibration accumulates in `runs/memory.json` (inspectable JSON, survives restarts). Full design, including the game-agnostic expansion: `docs/architecture.md`.
+Browser client (camera capture, speech, debug view) streams JPEG frames at ~4 FPS over WebSocket to a single FastAPI process. 
+
+**Tic-tac-toe flow:** Perception (motion gate → rectify → per-cell read) produces a `PerceptionResult`; the FSM — a pure function over states `CALIBRATING → HUMAN_TURN → CONFIRMING → AGENT_TURN → AWAIT_DRAW → GAME_OVER`, plus `MISMATCH` — turns stable readings into game events; the configured engine picks the reply; the announcer speaks it.
+
+**Submarine flow:** Perception monitors user-defined bounded area for changes; when image settles (no changes for N frames), FSM triggers vision recognition → Claude Fable OCRs the puzzle → Claude Sonnet solves it → answer displayed.
+
+Every transition, perception summary, and model call lands in `runs/events.jsonl`; per-setup calibration accumulates in `runs/memory.json` (inspectable JSON, survives restarts). Full design: `docs/architecture.md`.
 
 ```
 client (localhost) ──ws frames──▶ FastAPI: perception → FSM → engine → announcer ──state/speech──▶ client
-                                              └── low confidence only ──▶ vision arbiter (OpenRouter)
+                                              ├── tic-tac-toe: low confidence only ──▶ vision arbiter (Anthropic)
+                                              └── submarine: settled image ──▶ recognition + solver (Anthropic)
 ```
 
 ## Decisions, briefly
 
+**Tic-tac-toe:**
 - **Minimax over LLM for moves** — deterministic, verifiable, 0ms, $0. The LLM engine exists behind the same interface (one config line) and is game-agnostic; legality validation in the FSM contains it either way.
 - **Expensive inference at the edge** — the model sees one rectified image, only when classical CV admits uncertainty. Zero model calls in a clean game.
 - **Markerless grid detection** — the one shipping path reads a plain hand-drawn `#` via Hough line families and their intersections, rotation and drift included. A fiducial (ArUco) fallback is deliberately *not* implemented; `perception/rectify_aruco.py` is a documented placeholder marking where it would go if a venue's lighting ever demanded it.
 - **Debounce + motion gate over per-frame reads** — a mark exists when it survives K still frames, which is what makes half-drawn marks and hands-in-frame non-events.
 - **Agent verifies its own moves** — the human draws for it, so `AWAIT_DRAW` confirms the ink matches the announcement before play continues.
+
+**Submarine:**
+- **Manual corner selection** — user defines the bounded area by dragging 4 corner markers, works with any puzzle source (books, screens, worksheets).
+- **Change detection over continuous scanning** — monitors for stability; recognition only triggers when image hasn't changed for N frames, avoiding wasted API calls.
+- **Vision-first recognition** — Claude Fable's multimodal capabilities read questions directly from images, handling various fonts, handwriting, and layouts.
+- **Solver with reasoning** — Claude Sonnet provides not just answers but explanations, making the system educational.
+
+**Shared:**
 - **No agent framework, no DB, one process** — the loop is a state machine; JSONL and a JSON file are enough state, and everything stays inspectable.
 
 ## Deploy (EC2, optional)
@@ -82,14 +111,26 @@ Behind an ALB: target group → :8000, health check `GET /health`, **idle timeou
 - **Wrong lock on a dark desk** — the detector only accepts lines that are ink-dark with equally bright paper on both sides, which rejects paper edges and shadows; if a lock still looks wrong, check for glare and stray doodles near the grid (ink outside the grid but within a cell's reach is read as a mark — that's the stated assumption).
 - **Everything looks right but it's wrong** — read `runs/events.jsonl` for the last confirm: it records exactly what perception saw and why the FSM did what it did.
 
+## Models
+
+All using Anthropic API directly (Claude family):
+
+- **Arbiter** (tic-tac-toe low-confidence): `claude-sonnet-5`
+- **Engine** (optional LLM moves): `claude-sonnet-5`
+- **Announcer** (flavor text): `claude-haiku-4-5-20251001` (fast)
+- **Recognition** (submarine vision OCR): `claude-fable-5-1`
+- **Solver** (submarine reasoning): `claude-sonnet-5`
+
 ## Repo map
 
 ```
 server/core/        game/engine protocols, FSM, store, LLM plumbing — game-blind
-server/perception/  geometry only: motion gate, rectification, debug composite
-server/games/       one package per game; tic_tac_toe implemented, chess/ marks the seam
-client/             one HTML file: camera, speech, debug view
-scripts/            board PDF generator, arbiter smoke test
+server/perception/  geometry + change detection: motion gate, rectification, stability monitoring
+server/games/       one package per game:
+                    - tic_tac_toe/  minimax engine, mark reading, grid detection
+                    - submarine/    vision recognition, puzzle solver, change detection config
+client/             one HTML file: camera, speech, debug view, game selector
+scripts/            board PDF generator, arbiter smoke test, submarine test
 tests/              game, engines, FSM on synthetic perception feeds
 ```
 
