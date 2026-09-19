@@ -684,6 +684,47 @@
     { x: 0.15, y: 0.85 }    // bottom-left
   ];
 
+  function drawSubmarineBoundary() {
+    if (!$('cornerOverlay').classList.contains('show')) return;
+
+    const video = $('video');
+    const ov = $('overlay');
+    if (!video.videoWidth) return;
+
+    const box = video.getBoundingClientRect();
+    ov.width = box.width;
+    ov.height = box.height;
+    ov.style.left = video.offsetLeft + 'px';
+    ov.style.top = video.offsetTop + 'px';
+
+    const ctx = ov.getContext('2d');
+    ctx.clearRect(0, 0, ov.width, ov.height);
+
+    // Convert corner positions to canvas coordinates
+    const pts = corners.map(c => [c.x * ov.width, c.y * ov.height]);
+
+    // Darken everything outside selection
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillRect(0, 0, ov.width, ov.height);
+
+    // Cut out selection area
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+    ctx.closePath();
+    ctx.fill();
+
+    // Draw red dotted boundary
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = '#E2574C';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 6]);
+    ctx.beginPath();
+    pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+    ctx.closePath();
+    ctx.stroke();
+  }
+
   function positionOverlayOnVideo() {
     const overlay = $('cornerOverlay');
     const video = $('video');
@@ -702,6 +743,9 @@
     for (let i = 0; i < 4; i++) {
       updateCornerPosition(i);
     }
+
+    // Redraw submarine boundary
+    drawSubmarineBoundary();
   }
 
   function setupCornerDrag() {
