@@ -18,10 +18,10 @@ Return ONLY this JSON:
 {
   "status": "recognized" | "solved" | "not_recognized",
   "puzzle_description": "textual description of what the puzzle asks for",
-  "answer": "answer to the puzzle so the other person understands you answered correctly"
+  "answer": "SHORT ANSWER ONLY - just the answer itself, NO explanation, NO reasoning, MINIMAL words"
 }
 
-Be professional and accurate."""
+CRITICAL: "answer" must be BRIEF - just the final answer (e.g., "Option C", "42", "Hello World", "S3"). NO explanations, NO reasoning, NO notes."""
 
 
 def recognizer_user(image_data: str) -> list[dict]:
