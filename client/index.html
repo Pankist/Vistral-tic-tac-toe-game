@@ -73,10 +73,11 @@
   #overlay { position:absolute; pointer-events:none; }
 
   /* submarine corner selection */
-  #cornerOverlay { position:absolute; inset:0; display:none; pointer-events:auto; }
+  #cornerOverlay { position:absolute; display:none; pointer-events:auto; }
   #cornerOverlay.show { display:block; }
   .corner { position:absolute; width:20px; height:20px; border:3px solid var(--coral);
-            border-radius:50%; cursor:move; background:rgba(226,87,76,0.3); }
+            border-radius:50%; cursor:move; background:rgba(226,87,76,0.3);
+            transform:translate(-50%, -50%); /* center on position */ }
   .corner:hover { background:var(--coral); }
 
   .agentbody { flex:1; display:flex; align-items:center; justify-content:center;
@@ -681,6 +682,26 @@
     { x: 0.15, y: 0.85 }    // bottom-left
   ];
 
+  function positionOverlayOnVideo() {
+    const overlay = $('cornerOverlay');
+    const video = $('video');
+    const wrapper = video.parentElement;
+
+    // Position overlay exactly over video element
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const videoRect = video.getBoundingClientRect();
+
+    overlay.style.left = (videoRect.left - wrapperRect.left) + 'px';
+    overlay.style.top = (videoRect.top - wrapperRect.top) + 'px';
+    overlay.style.width = videoRect.width + 'px';
+    overlay.style.height = videoRect.height + 'px';
+
+    // Update all corner positions
+    for (let i = 0; i < 4; i++) {
+      updateCornerPosition(i);
+    }
+  }
+
   function setupCornerDrag() {
     const overlay = $('cornerOverlay');
     const video = $('video');
@@ -696,7 +717,7 @@
 
     overlay.onmousemove = (e) => {
       if (dragCorner === null) return;
-      const rect = video.getBoundingClientRect();
+      const rect = overlay.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
 
@@ -720,6 +741,13 @@
     overlay.onmouseleave = () => {
       dragCorner = null;
     };
+
+    // Reposition overlay when video size changes
+    video.addEventListener('loadedmetadata', positionOverlayOnVideo);
+    window.addEventListener('resize', positionOverlayOnVideo);
+
+    // Initial position
+    setTimeout(positionOverlayOnVideo, 100);
   }
 
   function updateCornerPosition(i) {
