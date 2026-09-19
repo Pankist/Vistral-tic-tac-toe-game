@@ -10,7 +10,7 @@ SETTLE_FRAMES = 4
 CHANGE_THRESHOLD = 0.05
 
 # Vision model for puzzle recognition
-MODEL_RECOGNIZER = "claude-fable-5-1"
+MODEL_RECOGNIZER = "claude-sonnet-5"
 
 # Model for solving puzzles
 MODEL_SOLVER = "claude-sonnet-5"

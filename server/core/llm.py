@@ -37,7 +37,7 @@ class AnthropicClient:
         if not self.api_key:
             raise LLMUnavailable("ANTHROPIC_API_KEY not set")
         system, converted = _convert(messages)
-        payload = {"model": model, "max_tokens": 1024, "messages": converted}
+        payload = {"model": model, "max_tokens": 2048, "messages": converted}
         if system:
             payload["system"] = system
         t0 = time.perf_counter()
