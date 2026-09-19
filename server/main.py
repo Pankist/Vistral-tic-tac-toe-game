@@ -291,8 +291,16 @@ class SessionRunner:
         except Exception as e:
             self.store.log("recognition_failed", {"error": str(e)})
             event = ControlEvent(action="recognize_result",
-                                payload={"has_puzzle": False})
+                                payload={"status": "not_recognized"})
+
+        # Execute FSM effects
         await self._run_effects(self.fsm.step(self.session, event))
+
+        # If recognition failed, reset change detector to require NEW change
+        if event.payload.get("status") == "not_recognized":
+            if self.pipeline.change_detector:
+                self.pipeline.change_detector.reset()
+
         await self._send_state()
 
     async def _solve_puzzle(self, eff: SolvePuzzle) -> None:
