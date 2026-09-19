@@ -40,6 +40,9 @@ class AnthropicClient:
         payload = {"model": model, "max_tokens": 1024, "messages": converted}
         if system:
             payload["system"] = system
+        # Disable extended thinking for vision models to prevent empty text responses
+        if "fable" in model.lower():
+            payload["thinking"] = {"type": "disabled"}
         t0 = time.perf_counter()
         try:
             resp = httpx.post(
