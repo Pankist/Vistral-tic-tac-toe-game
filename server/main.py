@@ -120,6 +120,12 @@ class SessionRunner:
             await self._simulate(msg)
             return
 
+        # Handle game switching
+        if action == "switch_game":
+            game_name = msg.get("game", "tic_tac_toe")
+            await self._switch_game(game_name)
+            return
+
         # Handle submarine-specific controls
         if action == "set_corners":
             corners = msg.get("corners", [])
@@ -138,6 +144,42 @@ class SessionRunner:
             self.pipeline.hint = None
             self.pipeline.last_k = 0
         await self._run_effects(effects)
+        await self._send_state()
+
+    async def _switch_game(self, game_name: str) -> None:
+        """Dynamically switch to a different game."""
+        import importlib
+
+        # Reload game components
+        self.game = load_game(game_name)
+        gcfg = importlib.import_module(f"server.games.{game_name}.config")
+        self.gcfg = gcfg
+        self.store = Store(self.game.name)
+        client = AnthropicClient()
+        self.engine = load_engine(self.game, client, log=self.store.log, game_name=game_name)
+        self.announcer = Announcer(load_phrases(game_name), cfg.ANNOUNCER, client,
+                                   log=self.store.log)
+        self.arbiter = Arbiter(client, load_prompts_module(game_name), log=self.store.log)
+
+        # Reload pipeline with new marks module
+        marks = load_marks_module(game_name)
+        if marks:
+            self.pipeline = Pipeline(marks)
+        else:
+            # Submarine doesn't have marks
+            self.pipeline = Pipeline(None)
+
+        # Recreate FSM with new game
+        self.fsm = FSM(self.game, Params(k_stable=cfg.K_STABLE,
+                                         n_calib=cfg.N_CALIB,
+                                         t_arbiter=getattr(gcfg, 'T_ARBITER', 0.75)))
+
+        # Reset session
+        self.session = Session()
+        self.pipeline.hint = None
+        self.pipeline.last_k = 0
+        self.message = "Game switched. Press Start when ready."
+
         await self._send_state()
 
     async def _simulate(self, msg: dict) -> None:
