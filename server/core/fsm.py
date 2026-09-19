@@ -230,7 +230,22 @@ class FSM:
                             LogEvent("image_settled", {"settle_count": s.settle_count})
                         ]
                 return []
-            # Other submarine states don't process perception
+
+            if s.state == "STANDBY":
+                # If image changes while in STANDBY, go back to MONITORING
+                change_info = p.change_info if hasattr(p, 'change_info') else None
+                if change_info and change_info.get('has_changed'):
+                    s.state = "MONITORING"
+                    s.settle_count = 0
+                    s.puzzle_text = ""
+                    s.answer = ""
+                    return [
+                        Announce("monitoring"),
+                        LogEvent("image_changed", {"change_detected": True})
+                    ]
+                return []
+
+            # Other submarine states (RECOGNIZING) don't process perception
             return []
 
         # Tic-tac-toe perception flow
