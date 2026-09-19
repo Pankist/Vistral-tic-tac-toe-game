@@ -282,7 +282,7 @@ class SessionRunner:
         from server.games.submarine.engine import SubmarineEngine
         engine = SubmarineEngine(log=self.store.log)
 
-        rect = self.pipeline.last_rectified or eff.image
+        rect = self.pipeline.last_rectified if self.pipeline.last_rectified is not None else eff.image
         try:
             if rect is None:
                 raise Exception("no image available")
