@@ -2,6 +2,7 @@
 
 PHRASES = {
     "start": ["Starting puzzle monitor.", "Watching for puzzles.", "Ready to recognize puzzles."],
+    "reset": ["Resetting. Ready for new puzzle."],
     "monitoring": ["Monitoring for puzzles..."],
     "settled": ["Image settled, analyzing..."],
     "no_puzzle": ["No puzzle detected. Waiting for changes."],

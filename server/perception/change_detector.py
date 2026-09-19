@@ -83,10 +83,10 @@ class ChangeDetector:
         settled = self.stable_count >= self.settle_frames
 
         return {
-            'changed': changed,
-            'settled': settled,
-            'stable_count': self.stable_count,
-            'diff_score': mean_diff
+            'changed': bool(changed),
+            'settled': bool(settled),
+            'stable_count': int(self.stable_count),
+            'diff_score': float(mean_diff)
         }
 
     def reset(self):
