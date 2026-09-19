@@ -433,7 +433,13 @@
         $('answerText').textContent = 'Answer: ' + s.submarine.answer;
       }
     }
-    drawOverlay(lastCorners);
+
+    // Draw appropriate overlay based on game mode
+    if ($('gameSelect').value === 'submarine') {
+      drawSubmarineBoundary();
+    } else {
+      drawOverlay(lastCorners);
+    }
 
     const mm = s.fsm === 'MISMATCH';
     $('voicePanel').classList.toggle('alert', mm);
